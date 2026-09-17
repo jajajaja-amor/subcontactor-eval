@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "updatedAt": "2026-09-17T07:31:56.809Z",
   "items": [
     {
       "id": "need-extraction",
@@ -247,12 +247,12 @@
       "temperature": 0.2,
       "maxTokens": 1200,
       "requiredTools": [],
-      "version": "1.0.0",
+      "version": "1.0.1",
       "filePath": "skills/greeting/SKILL.md",
       "status": "已发布",
       "owner": "运营/对话",
       "trigger": "你好、在吗",
-      "updatedAt": "2026-09-17T08:00:00.000Z"
+      "updatedAt": "2026-09-17T07:31:56.809Z"
     },
     {
       "id": "sk_schedule",

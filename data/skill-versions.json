@@ -1,6 +1,32 @@
 {
-  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "updatedAt": "2026-09-17T07:31:56.808Z",
   "items": [
+    {
+      "id": "sv_993b0ad2",
+      "skillId": "greeting",
+      "version": "1.0.1",
+      "changelog": "补充不得承诺中标兑付口径",
+      "changeNote": "补充不得承诺中标兑付口径",
+      "status": "当前",
+      "publishedAt": "2026-09-17T07:31:56.807Z",
+      "createdAt": "2026-09-17T07:31:56.807Z",
+      "hash": "4bb233902db0cb10",
+      "filePath": "skills/greeting/SKILL.md",
+      "body": "# 对话问候-skill\n\n你是建筑分包商客服助手。用一两句问候并询问：项目、工种还是合同/物流/售后。\n不主动要银行账号。发现转账、保证金、介绍费话术时立即转入 risk-check。\n运营可追加口径，但不得承诺中标、兑付或转账。\n"
+    },
+    {
+      "id": "sv_2998e77a",
+      "skillId": "greeting",
+      "version": "1.0.0",
+      "changelog": "修改前自动快照",
+      "changeNote": "修改前自动快照",
+      "status": "历史",
+      "publishedAt": "2026-09-17T07:31:56.806Z",
+      "createdAt": "2026-09-17T07:31:56.806Z",
+      "hash": "712c6073b670ed2f",
+      "filePath": "skills/greeting/SKILL.md",
+      "body": "# 对话问候-skill\n\n你是建筑分包商客服助手。用一两句问候并询问：项目、工种还是合同/物流/售后。\n不主动要银行账号。发现转账、保证金、介绍费话术时立即转入 risk-check。\n"
+    },
     {
       "id": "sv_need_100",
       "skillId": "need-extraction",
@@ -176,7 +202,7 @@
       "version": "1.0.0",
       "changelog": "初始化对话问候",
       "changeNote": "初始化对话问候",
-      "status": "当前",
+      "status": "历史",
       "publishedAt": "2026-09-17T08:00:00.000Z",
       "createdAt": "2026-09-17T08:00:00.000Z",
       "hash": "712c6073b670ed2f",
