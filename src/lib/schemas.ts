@@ -197,6 +197,7 @@ export const evalBatchSchema = z.object({
   name: z.string(),
   status: z.enum(["待运行", "运行中", "已完成", "失败"]),
   caseCount: z.number().int(),
+  caseIds: z.array(z.string()),
   passRate: z.number().nullable(),
   startedAt: z.string().nullable(),
 });

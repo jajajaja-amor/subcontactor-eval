@@ -215,6 +215,7 @@ export type EvalBatch = {
   name: string;
   status: EvalBatchStatus;
   caseCount: number;
+  caseIds: string[];
   passRate: number | null;
   startedAt: string | null;
 };

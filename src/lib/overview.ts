@@ -66,7 +66,7 @@ export async function getOverviewData(): Promise<OverviewData> {
     listOrders(),
   ]);
 
-  const today = "2026-09-17";
+  const today = new Date().toISOString().slice(0, 10);
   const openStatuses = new Set(["待处理", "处理中", "待人工接管"]);
   const days = Array.from({ length: 7 }, (_, index) => {
     const date = new Date(`${today}T00:00:00.000Z`);

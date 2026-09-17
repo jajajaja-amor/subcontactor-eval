@@ -10,9 +10,20 @@ import {
   YAxis,
 } from "recharts";
 
+import { useIsClient } from "@/hooks/use-is-client";
 import type { TicketVolumePoint } from "@/lib/overview";
 
 export function TicketVolumeChart({ data }: { data: TicketVolumePoint[] }) {
+  const mounted = useIsClient();
+
+  if (!mounted) {
+    return (
+      <div className="flex h-56 items-center text-sm text-muted-foreground">
+        正在绘制工单量…
+      </div>
+    );
+  }
+
   return (
     <div className="h-56 w-full">
       <ResponsiveContainer width="100%" height="100%">

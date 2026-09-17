@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/empty-state";
+import { OpsActionButton } from "@/components/ops-action-button";
 import { PageHeader } from "@/components/page-header";
 import { StatusBadge, statusTone } from "@/components/status-badge";
 import {
@@ -46,6 +47,7 @@ export default async function TicketsPage() {
                   <TableHead>优先级</TableHead>
                   <TableHead>状态</TableHead>
                   <TableHead>处理人</TableHead>
+                  <TableHead className="text-right">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -72,6 +74,31 @@ export default async function TicketsPage() {
                       <StatusBadge label={ticket.status} tone={statusTone(ticket.status)} />
                     </TableCell>
                     <TableCell>{ticket.assignee}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap justify-end gap-2">
+                        {ticket.status === "已关闭" ? (
+                          <span className="text-xs text-muted-foreground">已关闭</span>
+                        ) : (
+                          <>
+                            <OpsActionButton action="run" id={ticket.id} label="运行" />
+                            {ticket.status === "处理中" || ticket.status === "待处理" ? (
+                              <OpsActionButton
+                                action="retry"
+                                id={ticket.id}
+                                label="重试"
+                                variant="outline"
+                              />
+                            ) : null}
+                            <OpsActionButton
+                              action="takeover"
+                              id={ticket.id}
+                              label="接管"
+                              variant="outline"
+                            />
+                          </>
+                        )}
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

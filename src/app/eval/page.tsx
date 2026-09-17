@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/empty-state";
+import { OpsActionButton } from "@/components/ops-action-button";
 import { PageHeader } from "@/components/page-header";
 import { StatusBadge, statusTone } from "@/components/status-badge";
 import {
@@ -85,6 +86,7 @@ export default async function EvalPage() {
                   <TableHead>批次</TableHead>
                   <TableHead>状态</TableHead>
                   <TableHead>通过率</TableHead>
+                  <TableHead className="text-right">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -98,6 +100,14 @@ export default async function EvalPage() {
                       {batch.passRate == null
                         ? "尚未出分"
                         : `${Math.round(batch.passRate * 100)}%`}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <OpsActionButton
+                        action="eval"
+                        id={batch.id}
+                        label={batch.status === "待运行" ? "运行" : "重试"}
+                        variant={batch.status === "待运行" ? "default" : "outline"}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
