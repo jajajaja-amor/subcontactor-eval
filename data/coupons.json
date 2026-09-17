@@ -1,0 +1,41 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "cpn_settle8",
+      "name": "主体结构结算 8 折尾款减免",
+      "code": "JG-SETTLE-8",
+      "type": "结算折扣",
+      "value": 8,
+      "valueUnit": "percent",
+      "status": "可领取",
+      "validFrom": "2026-09-01T00:00:00.000Z",
+      "validTo": "2026-10-15T23:59:59.000Z",
+      "minContractAmount": 500000
+    },
+    {
+      "id": "cpn_entry12k",
+      "name": "进场补贴 12000 元",
+      "code": "JG-ENTRY-12K",
+      "type": "进场补贴",
+      "value": 12000,
+      "valueUnit": "cny",
+      "status": "可领取",
+      "validFrom": "2026-09-01T00:00:00.000Z",
+      "validTo": "2026-09-30T23:59:59.000Z",
+      "minContractAmount": 800000
+    },
+    {
+      "id": "cpn_delay",
+      "name": "工期节点奖励",
+      "code": "JG-NODE-5K",
+      "type": "工期奖励",
+      "value": 5000,
+      "valueUnit": "cny",
+      "status": "已停用",
+      "validFrom": "2026-07-01T00:00:00.000Z",
+      "validTo": "2026-08-31T23:59:59.000Z",
+      "minContractAmount": 300000
+    }
+  ]
+}

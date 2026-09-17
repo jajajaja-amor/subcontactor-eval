@@ -1,0 +1,57 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "ord_p3_masonry",
+      "contractNo": "HT-2026-0831-012",
+      "projectName": "临港新城 12# 住宅",
+      "productId": "prd_masonry",
+      "userId": "usr_chen",
+      "status": "施工中",
+      "amount": 1260000,
+      "siteAddress": "上海市浦东新区临港新城环湖西一路 88 号",
+      "startAt": "2026-08-18T00:00:00.000Z",
+      "expectedEndAt": "2026-11-30T00:00:00.000Z",
+      "createdAt": "2026-08-12T03:10:00.000Z"
+    },
+    {
+      "id": "ord_p3_rebar",
+      "contractNo": "HT-2026-0902-007",
+      "projectName": "临港新城 12# 住宅",
+      "productId": "prd_rebar",
+      "userId": "usr_liu",
+      "status": "施工中",
+      "amount": 980000,
+      "siteAddress": "上海市浦东新区临港新城环湖西一路 88 号",
+      "startAt": "2026-09-01T00:00:00.000Z",
+      "expectedEndAt": "2026-12-15T00:00:00.000Z",
+      "createdAt": "2026-08-28T09:22:00.000Z"
+    },
+    {
+      "id": "ord_ct_facade",
+      "contractNo": "HT-2026-0910-003",
+      "projectName": "城投金融中心裙楼",
+      "productId": "prd_facade",
+      "userId": "usr_zhao",
+      "status": "待进场",
+      "amount": 2140000,
+      "siteAddress": "上海市黄浦区河南南路 168 号",
+      "startAt": "2026-09-22T00:00:00.000Z",
+      "expectedEndAt": "2027-03-01T00:00:00.000Z",
+      "createdAt": "2026-09-10T02:40:00.000Z"
+    },
+    {
+      "id": "ord_old_form",
+      "contractNo": "HT-2026-0618-021",
+      "projectName": "嘉定工业园 3# 厂房",
+      "productId": "prd_formwork",
+      "userId": "usr_chen",
+      "status": "已结算",
+      "amount": 540000,
+      "siteAddress": "上海市嘉定区德富路 1200 号",
+      "startAt": "2026-06-20T00:00:00.000Z",
+      "expectedEndAt": "2026-08-30T00:00:00.000Z",
+      "createdAt": "2026-06-18T06:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "imp_01",
+      "title": "物流工具补充门岗限高",
+      "status": "进行中",
+      "source": "标注 an_01",
+      "owner": "工具组",
+      "impact": "减少卸货改门类人工接管"
+    },
+    {
+      "id": "imp_02",
+      "title": "优惠核销硬规则写入 Skill 1.0.4",
+      "status": "待评估",
+      "source": "标注 an_02",
+      "owner": "Skill 组",
+      "impact": "降低商务咨询误答"
+    },
+    {
+      "id": "imp_03",
+      "title": "结算 Skill 补齐缺件清单",
+      "status": "已上线",
+      "source": "工单 tck_10003",
+      "owner": "结算组",
+      "impact": "结算类工单一次性回复率提升"
+    }
+  ]
+}

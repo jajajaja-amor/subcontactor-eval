@@ -1,0 +1,45 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "lg_rebar_01",
+      "orderId": "ord_p3_rebar",
+      "material": "HRB400 钢筋 32 吨",
+      "carrier": "申通物流车队",
+      "status": "在途",
+      "eta": "2026-09-17T14:00:00.000Z",
+      "location": "S2 沪芦高速芦潮港收费站",
+      "updatedAt": "2026-09-17T05:40:00.000Z"
+    },
+    {
+      "id": "lg_brick_01",
+      "orderId": "ord_p3_masonry",
+      "material": "蒸压加气砌块 18 车",
+      "carrier": "临港建材配送",
+      "status": "已进场",
+      "eta": "2026-09-16T09:00:00.000Z",
+      "location": "12# 楼西侧堆场",
+      "updatedAt": "2026-09-16T09:26:00.000Z"
+    },
+    {
+      "id": "lg_glass_01",
+      "orderId": "ord_ct_facade",
+      "material": "隐框玻璃板块 42 件",
+      "carrier": "华东特种运输",
+      "status": "待发运",
+      "eta": "2026-09-20T08:00:00.000Z",
+      "location": "张家港加工厂仓库",
+      "updatedAt": "2026-09-16T11:10:00.000Z"
+    },
+    {
+      "id": "lg_form_01",
+      "orderId": "ord_old_form",
+      "material": "铝合金模板 2600㎡",
+      "carrier": "班组自运",
+      "status": "已签收",
+      "eta": "2026-06-19T16:00:00.000Z",
+      "location": "嘉定工业园 3# 已退场",
+      "updatedAt": "2026-08-31T03:12:00.000Z"
+    }
+  ]
+}

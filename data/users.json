@@ -1,0 +1,37 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "usr_chen",
+      "name": "陈建国",
+      "role": "总包项目经理",
+      "company": "中建华东第三项目部",
+      "phone": "138****1208",
+      "status": "正常"
+    },
+    {
+      "id": "usr_liu",
+      "name": "刘敏",
+      "role": "现场代表",
+      "company": "中建华东第三项目部",
+      "phone": "139****6631",
+      "status": "正常"
+    },
+    {
+      "id": "usr_zhao",
+      "name": "赵鸿",
+      "role": "成本经理",
+      "company": "城投建设总承包部",
+      "phone": "137****4419",
+      "status": "正常"
+    },
+    {
+      "id": "usr_cs",
+      "name": "周倩",
+      "role": "内部客服",
+      "company": "SubcontractOps 运营中心",
+      "phone": "021-****6612",
+      "status": "正常"
+    }
+  ]
+}

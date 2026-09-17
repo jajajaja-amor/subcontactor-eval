@@ -1,0 +1,37 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "sv_schedule_120",
+      "skillId": "sk_schedule",
+      "version": "1.2.0",
+      "changelog": "增加夜间加班备案检查。",
+      "status": "当前",
+      "publishedAt": "2026-09-10T04:00:00.000Z"
+    },
+    {
+      "id": "sv_schedule_110",
+      "skillId": "sk_schedule",
+      "version": "1.1.0",
+      "changelog": "首次接入班组档期表。",
+      "status": "历史",
+      "publishedAt": "2026-08-02T04:00:00.000Z"
+    },
+    {
+      "id": "sv_logistics_111",
+      "skillId": "sk_logistics",
+      "version": "1.1.1",
+      "changelog": "补充限高与卸货口冲突提示。",
+      "status": "当前",
+      "publishedAt": "2026-09-08T09:12:00.000Z"
+    },
+    {
+      "id": "sv_coupon_103",
+      "skillId": "sk_coupon",
+      "version": "1.0.3",
+      "changelog": "明确进场补贴与秋季让利互斥。",
+      "status": "当前",
+      "publishedAt": "2026-09-05T02:20:00.000Z"
+    }
+  ]
+}

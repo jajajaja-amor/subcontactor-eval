@@ -1,0 +1,65 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "sk_schedule",
+      "name": "班组排班问询",
+      "description": "核对工种档期、增援人数和进场时间，必要时升级人工调度。",
+      "status": "已发布",
+      "version": "1.2.0",
+      "owner": "运营/排班",
+      "trigger": "增援、加班、明日能否进场",
+      "updatedAt": "2026-09-10T04:00:00.000Z"
+    },
+    {
+      "id": "sk_logistics",
+      "name": "材料进场物流",
+      "description": "查询在途车辆、卸货口限制并给出绕行建议。",
+      "status": "已发布",
+      "version": "1.1.1",
+      "owner": "运营/物流",
+      "trigger": "钢筋车、卸货、在途、改门",
+      "updatedAt": "2026-09-08T09:12:00.000Z"
+    },
+    {
+      "id": "sk_coupon",
+      "name": "结算优惠核销",
+      "description": "解释券码规则、互斥关系和抵扣节点。",
+      "status": "已发布",
+      "version": "1.0.3",
+      "owner": "运营/商务",
+      "trigger": "券、让利、补贴、能否叠加",
+      "updatedAt": "2026-09-05T02:20:00.000Z"
+    },
+    {
+      "id": "sk_policy",
+      "name": "返工与退场政策",
+      "description": "引用返工时限、退场步骤和材料退换规则。",
+      "status": "已发布",
+      "version": "1.0.1",
+      "owner": "运营/质量",
+      "trigger": "返工、退场、不合格、整改",
+      "updatedAt": "2026-08-30T08:00:00.000Z"
+    },
+    {
+      "id": "sk_settlement",
+      "name": "进度款与结算",
+      "description": "说明审核时效、缺件清单和加急通道。",
+      "status": "草稿",
+      "version": "0.9.0",
+      "owner": "运营/结算",
+      "trigger": "进度款、结算单、缺资料",
+      "updatedAt": "2026-09-14T03:33:00.000Z"
+    },
+    {
+      "id": "sk_catalog",
+      "name": "分包目录问询",
+      "description": "介绍可接单工种、单价口径和暂停原因。",
+      "status": "已发布",
+      "version": "1.0.0",
+      "owner": "运营/产品",
+      "trigger": "能否接、单价、水电安装",
+      "updatedAt": "2026-08-20T01:00:00.000Z"
+    }
+  ]
+}

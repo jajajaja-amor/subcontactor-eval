@@ -1,0 +1,55 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "run_90011",
+      "ticketId": "tck_10021",
+      "skillId": "sk_schedule",
+      "status": "进行中",
+      "latencyMs": 1820,
+      "startedAt": "2026-09-17T02:19:12.000Z",
+      "model": "qwen2.5-72b-instruct",
+      "summary": "已查询砌筑班组明日可增援 6 人，正在确认安全交底名单。"
+    },
+    {
+      "id": "run_90010",
+      "ticketId": "tck_10018",
+      "skillId": "sk_logistics",
+      "status": "已接管",
+      "latencyMs": 2460,
+      "startedAt": "2026-09-17T05:43:01.000Z",
+      "model": "qwen2.5-72b-instruct",
+      "summary": "工具发现西门限高冲突，已按策略升级人工调度。"
+    },
+    {
+      "id": "run_90008",
+      "ticketId": "tck_10009",
+      "skillId": "sk_policy",
+      "status": "成功",
+      "latencyMs": 980,
+      "startedAt": "2026-09-15T07:21:40.000Z",
+      "model": "qwen2.5-32b-instruct",
+      "summary": "准确引用 72 小时返工政策并给出四步流程。"
+    },
+    {
+      "id": "run_90007",
+      "ticketId": "tck_10015",
+      "skillId": "sk_coupon",
+      "status": "失败",
+      "latencyMs": 4100,
+      "startedAt": "2026-09-16T09:06:10.000Z",
+      "model": "qwen2.5-72b-instruct",
+      "summary": "优惠规则工具超时，等待重试。"
+    },
+    {
+      "id": "run_90002",
+      "ticketId": "tck_09988",
+      "skillId": "sk_catalog",
+      "status": "成功",
+      "latencyMs": 640,
+      "startedAt": "2026-09-11T06:13:04.000Z",
+      "model": "qwen2.5-32b-instruct",
+      "summary": "正确告知水电安装暂停接单及预计恢复时间。"
+    }
+  ]
+}

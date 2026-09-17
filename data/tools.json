@@ -1,0 +1,45 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "tool_query_order",
+      "name": "query_order",
+      "description": "按合同号或项目名称查询分包订单状态。",
+      "status": "已启用",
+      "risk": "低",
+      "endpoint": "internal://tools/query-order"
+    },
+    {
+      "id": "tool_query_logistics",
+      "name": "query_logistics",
+      "description": "查询材料进场物流位置与 ETA。",
+      "status": "已启用",
+      "risk": "低",
+      "endpoint": "internal://tools/query-logistics"
+    },
+    {
+      "id": "tool_query_coupon",
+      "name": "query_coupon",
+      "description": "核验优惠券状态、门槛和互斥规则。",
+      "status": "已启用",
+      "risk": "中",
+      "endpoint": "internal://tools/query-coupon"
+    },
+    {
+      "id": "tool_query_faq",
+      "name": "query_faq",
+      "description": "检索政策与 FAQ 知识。",
+      "status": "已启用",
+      "risk": "低",
+      "endpoint": "internal://tools/query-faq"
+    },
+    {
+      "id": "tool_escalate",
+      "name": "escalate_to_human",
+      "description": "将工单标记为待人工接管并通知值班客服。",
+      "status": "调试中",
+      "risk": "高",
+      "endpoint": "internal://tools/escalate"
+    }
+  ]
+}
