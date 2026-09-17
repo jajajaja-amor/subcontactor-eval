@@ -3,12 +3,16 @@ import path from "node:path";
 const DATA_FILE_PATTERN = /^[a-z0-9][a-z0-9._-]*\.json$/i;
 
 export function getProjectRoot(): string {
-  return path.resolve(process.env.PROJECT_ROOT ?? process.cwd());
+  if (process.env.PROJECT_ROOT) {
+    return path.resolve(/* turbopackIgnore: true */ process.env.PROJECT_ROOT);
+  }
+
+  return process.cwd();
 }
 
 export function getDataDir(): string {
   if (process.env.DATA_DIR) {
-    return path.resolve(process.env.DATA_DIR);
+    return path.resolve(/* turbopackIgnore: true */ process.env.DATA_DIR);
   }
 
   return path.join(getProjectRoot(), "data");
