@@ -25,6 +25,15 @@ import { Textarea } from "@/components/ui/textarea";
 import type { Tool, ToolsConfig } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+function scrollToolDetail() {
+  queueMicrotask(() => {
+    document.getElementById("tool-detail")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+}
+
 export function ToolWorkbench({
   tools,
   config,
@@ -59,6 +68,7 @@ export function ToolWorkbench({
     setSelectedId(tool.id);
     setInputText(JSON.stringify(tool.sampleInput ?? {}, null, 2));
     setResult("");
+    scrollToolDetail();
   }
 
   async function runTest() {
@@ -189,7 +199,7 @@ export function ToolWorkbench({
       </Card>
 
       {selected ? (
-        <div className="grid gap-4 xl:grid-cols-2">
+        <div id="tool-detail" className="scroll-mt-24 grid gap-4 xl:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle>{selected.name} schema</CardTitle>

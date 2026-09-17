@@ -27,6 +27,15 @@ import { Textarea } from "@/components/ui/textarea";
 import type { Skill, SkillVersion } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+function queueMicroTaskScroll(elementId: string) {
+  queueMicrotask(() => {
+    document.getElementById(elementId)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+}
+
 type SkillWithPrompt = Skill & { systemPrompt?: string };
 
 export function SkillWorkbench({
@@ -77,7 +86,10 @@ export function SkillWorkbench({
                     <button
                       type="button"
                       className="text-left"
-                      onClick={() => setSelectedId(skill.id)}
+                      onClick={() => {
+                        setSelectedId(skill.id);
+                        queueMicroTaskScroll("skill-editor");
+                      }}
                     >
                       <div className="font-medium">{skill.name}</div>
                       <div className="text-xs text-muted-foreground">
@@ -104,7 +116,10 @@ export function SkillWorkbench({
                         type="button"
                         size="sm"
                         variant="outline"
-                        onClick={() => setSelectedId(skill.id)}
+                        onClick={() => {
+                          setSelectedId(skill.id);
+                          queueMicroTaskScroll("skill-editor");
+                        }}
                       >
                         编辑
                       </Button>
@@ -123,7 +138,9 @@ export function SkillWorkbench({
       </Card>
 
       {selected ? (
-        <SkillEditor key={selected.id} skill={selected} versions={selectedVersions} />
+        <div id="skill-editor" className="scroll-mt-24">
+          <SkillEditor key={selected.id} skill={selected} versions={selectedVersions} />
+        </div>
       ) : null}
     </div>
   );
