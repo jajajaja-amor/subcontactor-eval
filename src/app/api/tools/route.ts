@@ -45,8 +45,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, tool });
     }
 
-    const result = await runRegisteredTool(parsed.data.name, parsed.data.input);
-    return NextResponse.json(result, { status: result.ok ? 200 : 400 });
+    if (parsed.data.action === "test") {
+      const result = await runRegisteredTool(parsed.data.name, parsed.data.input);
+      return NextResponse.json(result, { status: result.ok ? 200 : 400 });
+    }
+
+    return NextResponse.json({ ok: false, message: "不支持的操作" }, { status: 400 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Tool 操作失败";
     return NextResponse.json({ ok: false, message }, { status: 400 });

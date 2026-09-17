@@ -68,12 +68,16 @@ export async function setSkillEnabled(id: string, enabled: boolean) {
       if (item.id !== id) {
         return item;
       }
-      const status: Skill["status"] =
-        item.status === "草稿" && enabled ? "已发布" : enabled ? "已发布" : "已停用";
+      let nextStatus: Skill["status"] = item.status;
+      if (enabled) {
+        nextStatus = "已发布";
+      } else if (item.status !== "草稿") {
+        nextStatus = "已停用";
+      }
       return {
         ...item,
         enabled,
-        status: item.status === "草稿" && !enabled ? "草稿" : status,
+        status: nextStatus,
         updatedAt: nowIso(),
       };
     }),
