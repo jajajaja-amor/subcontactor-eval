@@ -1,0 +1,33 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "ho_height",
+      "name": "卸货口限高冲突",
+      "trigger": "物流工具发现门岗限高或绕行无法自动给出方案",
+      "action": "升级现场调度人工接管",
+      "enabled": true
+    },
+    {
+      "id": "ho_fraud",
+      "name": "资金诈骗话术",
+      "trigger": "提及保证金、介绍费、代收中标款、要求转账或验证码",
+      "action": "阻断危险承诺，提醒勿转账并转人工核验",
+      "enabled": true
+    },
+    {
+      "id": "ho_dispute",
+      "name": "结算争议",
+      "trigger": "结算单金额争议、扣款不认可、扬言投诉",
+      "action": "转成本经理，不得推诿",
+      "enabled": true
+    },
+    {
+      "id": "ho_special",
+      "name": "特种作业资质缺失",
+      "trigger": "高空/电气/焊接/起重/有限空间且资质缺失或过期",
+      "action": "拒绝安排进场，转安全员",
+      "enabled": true
+    }
+  ]
+}

@@ -13,7 +13,9 @@
       "assignee": "Agent/排班问询",
       "createdAt": "2026-09-17T02:18:00.000Z",
       "updatedAt": "2026-09-17T02:26:00.000Z",
-      "summary": "总包希望 9 月 18 日增加 8 名砌筑工，Skill 正在核对班组档期。"
+      "summary": "总包希望 9 月 18 日增加 8 名砌筑工，Skill 正在核对班组档期。",
+      "projectId": "prj_lingang12",
+      "subcontractorId": "sub_hudong"
     },
     {
       "id": "tck_10018",
@@ -27,7 +29,9 @@
       "assignee": "待接管/现场调度",
       "createdAt": "2026-09-17T05:42:00.000Z",
       "updatedAt": "2026-09-17T05:51:00.000Z",
-      "summary": "西门限高 3.8 米，工具返回冲突后请求人工确认绕行方案。"
+      "summary": "西门限高 3.8 米，工具返回冲突后请求人工确认绕行方案。",
+      "projectId": "prj_lingang12",
+      "subcontractorId": "sub_pujiang"
     },
     {
       "id": "tck_10015",
@@ -41,7 +45,9 @@
       "assignee": "Agent/优惠核销",
       "createdAt": "2026-09-16T09:05:00.000Z",
       "updatedAt": "2026-09-16T09:05:00.000Z",
-      "summary": "成本经理询问 JG-ENTRY-12K 与秋季进场让利是否互斥。"
+      "summary": "成本经理询问 JG-ENTRY-12K 与秋季进场让利是否互斥。",
+      "projectId": "prj_ct_podium",
+      "subcontractorId": "sub_jiangnan"
     },
     {
       "id": "tck_10009",
@@ -55,7 +61,9 @@
       "assignee": "Agent/政策解释",
       "createdAt": "2026-09-15T07:20:00.000Z",
       "updatedAt": "2026-09-15T08:02:00.000Z",
-      "summary": "已按 72 小时返工政策给出步骤，现场已开整改单。"
+      "summary": "已按 72 小时返工政策给出步骤，现场已开整改单。",
+      "projectId": "prj_lingang12",
+      "subcontractorId": "sub_hudong"
     },
     {
       "id": "tck_10003",
@@ -69,7 +77,9 @@
       "assignee": "周倩",
       "createdAt": "2026-09-12T03:44:00.000Z",
       "updatedAt": "2026-09-13T01:10:00.000Z",
-      "summary": "补交安全标准化检查记录后完成结算关闭。"
+      "summary": "补交安全标准化检查记录后完成结算关闭。",
+      "projectId": "prj_jiading3",
+      "subcontractorId": "sub_lingang"
     },
     {
       "id": "tck_09988",
@@ -82,7 +92,39 @@
       "assignee": "Agent/产品目录",
       "createdAt": "2026-09-11T06:12:00.000Z",
       "updatedAt": "2026-09-11T06:30:00.000Z",
-      "summary": "已告知水电安装暂停接单，预计 10 月中恢复。"
+      "summary": "已告知水电安装暂停接单，预计 10 月中恢复。",
+      "projectId": "prj_lingang12"
+    },
+    {
+      "id": "tck_10030",
+      "title": "砌体空鼓返修谁承担费用？",
+      "userId": "usr_liu",
+      "orderId": "ord_p3_masonry",
+      "projectId": "prj_lingang12",
+      "subcontractorId": "sub_hudong",
+      "channel": "现场",
+      "status": "待处理",
+      "priority": "高",
+      "skillId": "after-sales-classification",
+      "assignee": "Agent/售后分类",
+      "createdAt": "2026-09-17T03:12:00.000Z",
+      "updatedAt": "2026-09-17T03:12:00.000Z",
+      "summary": "12# 二层填充墙空鼓，需区分质量缺陷与变更责任。"
+    },
+    {
+      "id": "tck_10031",
+      "title": "有人要我们先打保证金才能进场",
+      "userId": "usr_gao",
+      "projectId": "prj_pudong_confined",
+      "subcontractorId": "sub_xinjin",
+      "channel": "微信",
+      "status": "待人工接管",
+      "priority": "紧急",
+      "skillId": "risk-check",
+      "assignee": "待接管/合规",
+      "createdAt": "2026-09-17T04:08:00.000Z",
+      "updatedAt": "2026-09-17T04:10:00.000Z",
+      "summary": "疑似保证金诈骗话术，需阻断转账承诺。"
     }
   ]
 }

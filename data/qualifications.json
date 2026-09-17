@@ -1,0 +1,85 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "qual_hudong_safe",
+      "subcontractorId": "sub_hudong",
+      "type": "安全生产许可证",
+      "name": "安全生产许可证",
+      "certNo": "沪应急安许字[2025]0881",
+      "expiresAt": "2027-03-01T00:00:00.000Z",
+      "status": "有效",
+      "note": "主体结构劳务可用。"
+    },
+    {
+      "id": "qual_hudong_ins",
+      "subcontractorId": "sub_hudong",
+      "type": "保险",
+      "name": "建筑工程团体意外险",
+      "certNo": "PICC-SH-2026-4412",
+      "expiresAt": "2026-12-31T00:00:00.000Z",
+      "status": "有效",
+      "note": "含高处作业附加。"
+    },
+    {
+      "id": "qual_pujiang_weld",
+      "subcontractorId": "sub_pujiang",
+      "type": "特种作业证",
+      "name": "焊接与热切割作业证",
+      "certNo": "T-焊-2024-3310",
+      "expiresAt": "2026-10-20T00:00:00.000Z",
+      "status": "即将过期",
+      "note": "10 月 20 日前需复审。"
+    },
+    {
+      "id": "qual_jiangnan_tax",
+      "subcontractorId": "sub_jiangnan",
+      "type": "税务登记",
+      "name": "一般纳税人登记",
+      "certNo": "91320500MA1M88XX",
+      "expiresAt": null,
+      "status": "有效",
+      "note": "可开专票。"
+    },
+    {
+      "id": "qual_xinjin_safe",
+      "subcontractorId": "sub_xinjin",
+      "type": "安全生产许可证",
+      "name": "安全生产许可证",
+      "certNo": "",
+      "expiresAt": null,
+      "status": "缺失",
+      "note": "新分包商尚未提交安许。"
+    },
+    {
+      "id": "qual_xinjin_space",
+      "subcontractorId": "sub_xinjin",
+      "type": "特种作业证",
+      "name": "有限空间作业证",
+      "certNo": "",
+      "expiresAt": null,
+      "status": "缺失",
+      "note": "不得安排有限空间作业。"
+    },
+    {
+      "id": "qual_xinjin_warn",
+      "subcontractorId": "sub_xinjin",
+      "type": "预警",
+      "name": "准入预警",
+      "certNo": "WARN-2026-0912",
+      "expiresAt": null,
+      "status": "预警",
+      "note": "存在介绍费中介话术投诉，需官方渠道核验。"
+    },
+    {
+      "id": "qual_old_black",
+      "subcontractorId": "sub_shencheng",
+      "type": "黑名单",
+      "name": "档期违约观察",
+      "certNo": "OBS-2026-08",
+      "expiresAt": null,
+      "status": "预警",
+      "note": "非永久拉黑，暂停新接单。"
+    }
+  ]
+}

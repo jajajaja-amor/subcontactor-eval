@@ -6,6 +6,7 @@ import {
   Activity,
   BookOpen,
   ClipboardList,
+  FolderTree,
   Hammer,
   LayoutDashboard,
   Menu,
@@ -27,6 +28,7 @@ const NAV_ITEMS = [
   { href: "/tools", label: "Tools", icon: Wrench },
   { href: "/eval", label: "Eval", icon: Activity },
   { href: "/knowledge", label: "知识库", icon: BookOpen },
+  { href: "/catalog", label: "目录", icon: FolderTree },
   { href: "/runs", label: "运行", icon: PlayCircle },
   { href: "/settings", label: "配置", icon: Settings2 },
 ] as const;
