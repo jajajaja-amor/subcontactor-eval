@@ -1,0 +1,157 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "sub_hudong",
+      "name": "沪东砌筑劳务有限公司",
+      "specialty": "砌筑工程",
+      "qualificationLevel": "劳务分包一级",
+      "region": "上海浦东",
+      "trades": [
+        "砌筑",
+        "二次结构"
+      ],
+      "quoteMin": 380,
+      "quoteMax": 460,
+      "quoteUnit": "元/立方米",
+      "availableSlots": [
+        "2026-09-18",
+        "2026-09-25"
+      ],
+      "performanceScore": 4.6,
+      "history": [
+        "临港新城 12# 砌筑",
+        "嘉定 3# 填充墙"
+      ],
+      "tags": [
+        "履约稳定",
+        "可增援"
+      ],
+      "status": "可合作"
+    },
+    {
+      "id": "sub_pujiang",
+      "name": "浦江钢筋工程有限公司",
+      "specialty": "钢筋工程",
+      "qualificationLevel": "专业承包二级",
+      "region": "上海浦东",
+      "trades": [
+        "钢筋",
+        "套筒连接"
+      ],
+      "quoteMin": 1700,
+      "quoteMax": 1980,
+      "quoteUnit": "元/吨",
+      "availableSlots": [
+        "2026-09-20"
+      ],
+      "performanceScore": 4.4,
+      "history": [
+        "临港新城 12# 钢筋"
+      ],
+      "tags": [
+        "夜间可施工"
+      ],
+      "status": "可合作"
+    },
+    {
+      "id": "sub_lingang",
+      "name": "临港模板科技有限公司",
+      "specialty": "模板工程",
+      "qualificationLevel": "专业承包二级",
+      "region": "上海临港",
+      "trades": [
+        "铝模",
+        "木模"
+      ],
+      "quoteMin": 58,
+      "quoteMax": 76,
+      "quoteUnit": "元/平方米",
+      "availableSlots": [],
+      "performanceScore": 4.2,
+      "history": [
+        "嘉定工业园 3# 厂房模板"
+      ],
+      "tags": [
+        "已结算"
+      ],
+      "status": "可合作"
+    },
+    {
+      "id": "sub_shencheng",
+      "name": "申城机电安装有限公司",
+      "specialty": "水电安装",
+      "qualificationLevel": "机电安装二级",
+      "region": "上海闵行",
+      "trades": [
+        "给排水",
+        "电气"
+      ],
+      "quoteMin": 240000,
+      "quoteMax": 320000,
+      "quoteUnit": "元/项",
+      "availableSlots": [
+        "2026-10-15"
+      ],
+      "performanceScore": 3.9,
+      "history": [
+        "历史住宅水电"
+      ],
+      "tags": [
+        "档期已满"
+      ],
+      "status": "暂停"
+    },
+    {
+      "id": "sub_jiangnan",
+      "name": "江南幕墙装饰有限公司",
+      "specialty": "幕墙工程",
+      "qualificationLevel": "幕墙一级",
+      "region": "江苏苏州",
+      "trades": [
+        "玻璃幕墙",
+        "石材幕墙"
+      ],
+      "quoteMin": 860,
+      "quoteMax": 980,
+      "quoteUnit": "元/平方米",
+      "availableSlots": [
+        "2026-09-22",
+        "2026-10-08"
+      ],
+      "performanceScore": 4.5,
+      "history": [
+        "城投金融中心裙楼"
+      ],
+      "tags": [
+        "深化设计强"
+      ],
+      "status": "可合作"
+    },
+    {
+      "id": "sub_xinjin",
+      "name": "新进高空作业班组",
+      "specialty": "高空与特种作业",
+      "qualificationLevel": "暂未定级",
+      "region": "上海宝山",
+      "trades": [
+        "高空",
+        "焊接",
+        "有限空间"
+      ],
+      "quoteMin": 420,
+      "quoteMax": 680,
+      "quoteUnit": "元/工日",
+      "availableSlots": [
+        "2026-09-19"
+      ],
+      "performanceScore": 3.1,
+      "history": [],
+      "tags": [
+        "新合作",
+        "资质待核"
+      ],
+      "status": "观察"
+    }
+  ]
+}

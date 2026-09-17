@@ -15,12 +15,10 @@ import {
   runsCollectionSchema,
   ticketsCollectionSchema,
 } from "@/lib/schemas";
+import { getEnabledCapabilities } from "@/lib/skill-registry";
 import { updateJson } from "@/lib/store";
-import type { AgentRun, EvalBatch, RunStatus, Ticket } from "@/lib/types";
-import { queryActivities, queryCoupon } from "../../tools/query-coupon";
-import { queryFaq, queryReturnPolicies } from "../../tools/query-faq";
-import { queryLogistics } from "../../tools/query-logistics";
-import { queryOrder } from "../../tools/query-order";
+import { runRegisteredTool } from "@/lib/tool-runner";
+import type { AgentRun, EvalBatch, LogisticsRecord, RunStatus, Ticket } from "@/lib/types";
 
 export type RuntimeAction = "run" | "retry" | "takeover" | "eval";
 
@@ -69,12 +67,28 @@ async function planAndExecute(input: {
   skillId?: string;
   orderId?: string;
 }): Promise<PlanResult> {
-  const skillId = pickSkillId(input.title, input.skillId);
+  const { skills, tools } = await getEnabledCapabilities();
+  const preferred = input.skillId ?? pickSkillId(input.title);
+  const skill = skills.find((item) => item.id === preferred);
+  if (!skill) {
+    return {
+      skillId: preferred,
+      status: "失败",
+      summary: `Skill ${preferred} 未启用。Planner 当前可读 ${skills.length} 个 Skill、${tools.length} 个 Tool。`,
+    };
+  }
+
+  const skillId = skill.id;
   const started = Date.now();
+  const toolEnabled = (name: string) => tools.some((item) => item.name === name);
 
   if (skillId === "sk_logistics") {
+    if (!toolEnabled("query_logistics")) {
+      return { skillId, status: "失败", summary: "query_logistics 未启用，Executor 拒绝调用。" };
+    }
     const keyword = input.orderId || (input.title.includes("幕墙") ? "玻璃" : "钢筋");
-    const records = await queryLogistics(keyword);
+    const result = await runRegisteredTool("query_logistics", { keyword });
+    const records = Array.isArray(result.data) ? (result.data as LogisticsRecord[]) : [];
     const hit = records[0];
     if (/西门/.test(input.title)) {
       return {
@@ -91,10 +105,16 @@ async function planAndExecute(input: {
   }
 
   if (skillId === "sk_coupon") {
-    const coupons = await queryCoupon("进场");
-    const activities = await queryActivities("秋季");
-    const coupon = coupons[0];
-    const activity = activities[0];
+    if (!toolEnabled("query_coupon")) {
+      return { skillId, status: "失败", summary: "query_coupon 未启用，Executor 拒绝调用。" };
+    }
+    const result = await runRegisteredTool("query_coupon", { keyword: "进场" });
+    const payload = (result.data ?? {}) as {
+      coupons?: { code?: string }[];
+      activities?: { name?: string }[];
+    };
+    const coupon = payload.coupons?.[0];
+    const activity = payload.activities?.[0];
     return {
       skillId,
       status: "成功",
@@ -103,8 +123,14 @@ async function planAndExecute(input: {
   }
 
   if (skillId === "sk_policy") {
-    const policies = await queryReturnPolicies("返工");
-    const policy = policies[0];
+    if (!toolEnabled("query_faq")) {
+      return { skillId, status: "失败", summary: "query_faq 未启用，Executor 拒绝调用。" };
+    }
+    const result = await runRegisteredTool("query_faq", { keyword: "返工" });
+    const payload = (result.data ?? {}) as {
+      policies?: { name?: string; windowHours?: number; steps?: string[] }[];
+    };
+    const policy = payload.policies?.[0];
     return {
       skillId,
       status: "成功",
@@ -113,11 +139,15 @@ async function planAndExecute(input: {
   }
 
   if (skillId === "sk_settlement") {
-    const faqs = await queryFaq("进度款");
+    if (!toolEnabled("query_faq")) {
+      return { skillId, status: "失败", summary: "query_faq 未启用，Executor 拒绝调用。" };
+    }
+    const result = await runRegisteredTool("query_faq", { keyword: "进度款" });
+    const payload = (result.data ?? {}) as { faqs?: { answer?: string }[] };
     return {
       skillId,
       status: "成功",
-      summary: faqs[0]?.answer ?? "形象进度确认后 5 个工作日内完成审核。",
+      summary: payload.faqs?.[0]?.answer ?? "形象进度确认后 5 个工作日内完成审核。",
     };
   }
 
@@ -131,7 +161,13 @@ async function planAndExecute(input: {
     };
   }
 
-  const orders = await queryOrder(input.orderId || "临港");
+  const orderKeyword = input.orderId || "临港";
+  const orderResult = toolEnabled("query_orders")
+    ? await runRegisteredTool("query_orders", { keyword: orderKeyword })
+    : await runRegisteredTool("query_order", { keyword: orderKeyword });
+  const orders = Array.isArray(orderResult.data)
+    ? (orderResult.data as { projectName?: string }[])
+    : [];
   const order = orders[0];
   return {
     skillId,

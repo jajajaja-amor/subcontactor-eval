@@ -1,65 +1,406 @@
 {
-  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "updatedAt": "2026-09-17T07:31:56.809Z",
   "items": [
+    {
+      "id": "need-extraction",
+      "name": "需求抽取",
+      "description": "从对话抽取项目、工种、工程量和进场日。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_projects",
+        "query_subcontractors"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/need-extraction/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/匹配",
+      "trigger": "需求、工程量、什么工种",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "subcontractor-matching",
+      "name": "分包商匹配",
+      "description": "按工种、区域、档期和资质匹配分包商。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_subcontractors",
+        "query_qualifications",
+        "query_projects"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/subcontractor-matching/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/匹配",
+      "trigger": "推荐班组、谁能做",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "quote-reasoning",
+      "name": "报价推演",
+      "description": "对照报价区间与计价方式解释价格。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "calculate_price",
+        "query_subcontractors",
+        "query_contracts"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/quote-reasoning/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/商务",
+      "trigger": "多少钱、报价",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "response-generator",
+      "name": "回复生成",
+      "description": "把结论写成客服口吻的中文回复。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [],
+      "version": "1.0.0",
+      "filePath": "skills/response-generator/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/对话",
+      "trigger": "生成回复",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "risk-check",
+      "name": "风控审计",
+      "description": "可审计规则：报价、极限词、合同承诺、特种作业、诈骗。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_qualifications",
+        "query_contracts"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/risk-check/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/合规",
+      "trigger": "保证金、保证中标、特种作业",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "clarification-question",
+      "name": "澄清提问",
+      "description": "关键槽位缺失时最多问 3 个问题。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [],
+      "version": "1.0.0",
+      "filePath": "skills/clarification-question/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/对话",
+      "trigger": "没听清、还缺什么",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "subcontractor-substitution",
+      "name": "分包替换",
+      "description": "原班组无法履约时推荐替代。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_subcontractors",
+        "query_qualifications"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/subcontractor-substitution/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/匹配",
+      "trigger": "换一家、顶班",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "after-sales-classification",
+      "name": "售后分类",
+      "description": "质量缺陷、延误、缺件、返工、补偿、结算争议。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_orders",
+        "query_contracts"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/after-sales-classification/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/售后",
+      "trigger": "空鼓、返修、延误",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "complaint-triage",
+      "name": "投诉分诊",
+      "description": "投诉分级并决定是否立即转人工。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [],
+      "version": "1.0.0",
+      "filePath": "skills/complaint-triage/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/投诉",
+      "trigger": "投诉、曝光",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "conversation-summary",
+      "name": "会话摘要",
+      "description": "五行总结诉求、依据和下一步。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_orders"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/conversation-summary/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/标注",
+      "trigger": "总结一下",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "human-handoff-decision",
+      "name": "转人工决策",
+      "description": "按转人工规则决定接管岗位。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_orders",
+        "query_logistics"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/human-handoff-decision/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/值班",
+      "trigger": "转人工",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "project-scenario-advisor",
+      "name": "项目场景建议",
+      "description": "按项目类型给出进场和验收建议。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_projects"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/project-scenario-advisor/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/项目",
+      "trigger": "这个项目要注意什么",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "qualification-risk-reminder",
+      "name": "资质风险提醒",
+      "description": "许可证、特种作业证、保险缺失或过期提示。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_qualifications"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/qualification-risk-reminder/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/安全",
+      "trigger": "有没有证、保险",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "greeting",
+      "name": "对话问候",
+      "description": "开场问候并分流项目、合同、物流或售后。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [],
+      "version": "1.0.1",
+      "filePath": "skills/greeting/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/对话",
+      "trigger": "你好、在吗",
+      "updatedAt": "2026-09-17T07:31:56.809Z"
+    },
     {
       "id": "sk_schedule",
       "name": "班组排班问询",
-      "description": "核对工种档期、增援人数和进场时间，必要时升级人工调度。",
-      "status": "已发布",
+      "description": "核对工种档期、增援人数和进场时间。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_orders",
+        "query_subcontractors"
+      ],
       "version": "1.2.0",
+      "filePath": "skills/sk_schedule/SKILL.md",
+      "status": "已发布",
       "owner": "运营/排班",
       "trigger": "增援、加班、明日能否进场",
-      "updatedAt": "2026-09-10T04:00:00.000Z"
+      "updatedAt": "2026-09-17T08:00:00.000Z"
     },
     {
       "id": "sk_logistics",
       "name": "材料进场物流",
       "description": "查询在途车辆、卸货口限制并给出绕行建议。",
-      "status": "已发布",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_logistics",
+        "query_orders"
+      ],
       "version": "1.1.1",
+      "filePath": "skills/sk_logistics/SKILL.md",
+      "status": "已发布",
       "owner": "运营/物流",
       "trigger": "钢筋车、卸货、在途、改门",
-      "updatedAt": "2026-09-08T09:12:00.000Z"
+      "updatedAt": "2026-09-17T08:00:00.000Z"
     },
     {
       "id": "sk_coupon",
       "name": "结算优惠核销",
       "description": "解释券码规则、互斥关系和抵扣节点。",
-      "status": "已发布",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_contracts"
+      ],
       "version": "1.0.3",
+      "filePath": "skills/sk_coupon/SKILL.md",
+      "status": "已发布",
       "owner": "运营/商务",
       "trigger": "券、让利、补贴、能否叠加",
-      "updatedAt": "2026-09-05T02:20:00.000Z"
+      "updatedAt": "2026-09-17T08:00:00.000Z"
     },
     {
       "id": "sk_policy",
       "name": "返工与退场政策",
       "description": "引用返工时限、退场步骤和材料退换规则。",
-      "status": "已发布",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_orders"
+      ],
       "version": "1.0.1",
+      "filePath": "skills/sk_policy/SKILL.md",
+      "status": "已发布",
       "owner": "运营/质量",
       "trigger": "返工、退场、不合格、整改",
-      "updatedAt": "2026-08-30T08:00:00.000Z"
+      "updatedAt": "2026-09-17T08:00:00.000Z"
     },
     {
       "id": "sk_settlement",
       "name": "进度款与结算",
       "description": "说明审核时效、缺件清单和加急通道。",
-      "status": "草稿",
+      "enabled": false,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_contracts",
+        "query_orders"
+      ],
       "version": "0.9.0",
+      "filePath": "skills/sk_settlement/SKILL.md",
+      "status": "草稿",
       "owner": "运营/结算",
       "trigger": "进度款、结算单、缺资料",
-      "updatedAt": "2026-09-14T03:33:00.000Z"
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "ticket-triage",
+      "name": "工单分诊",
+      "description": "把进线分到排班、物流、政策或优惠 Skill。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_orders"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/ticket-triage/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/分诊",
+      "trigger": "这个单给谁",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
+    },
+    {
+      "id": "logistics-query",
+      "name": "物流查询技能文件",
+      "description": "材料进场物流的文件版 Skill。",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_logistics"
+      ],
+      "version": "1.0.0",
+      "filePath": "skills/logistics-query/SKILL.md",
+      "status": "已发布",
+      "owner": "运营/物流",
+      "trigger": "在途查询",
+      "updatedAt": "2026-09-17T08:00:00.000Z"
     },
     {
       "id": "sk_catalog",
       "name": "分包目录问询",
       "description": "介绍可接单工种、单价口径和暂停原因。",
-      "status": "已发布",
+      "enabled": true,
+      "model": "qwen2.5-72b-instruct",
+      "temperature": 0.2,
+      "maxTokens": 1200,
+      "requiredTools": [
+        "query_subcontractors",
+        "query_projects"
+      ],
       "version": "1.0.0",
+      "filePath": "skills/sk_catalog/SKILL.md",
+      "status": "已发布",
       "owner": "运营/产品",
       "trigger": "能否接、单价、水电安装",
-      "updatedAt": "2026-08-20T01:00:00.000Z"
+      "updatedAt": "2026-09-17T08:00:00.000Z"
     }
   ]
 }

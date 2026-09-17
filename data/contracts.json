@@ -1,0 +1,80 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "ct_0831_012",
+      "contractNo": "HT-2026-0831-012",
+      "subcontractorId": "sub_hudong",
+      "projectId": "prj_lingang12",
+      "amount": 1260000,
+      "pricingMethod": "综合单价",
+      "paymentMilestones": [
+        "进场 10%",
+        "主体完成 70%",
+        "验收结算 20%"
+      ],
+      "warranty": "砌体质量保修 24 个月，渗漏责任期内无偿返修。",
+      "changes": [
+        {
+          "at": "2026-09-01T00:00:00.000Z",
+          "note": "12# 增加一层填充墙",
+          "amountDelta": 68000
+        }
+      ],
+      "settlementStatus": "进度款中"
+    },
+    {
+      "id": "ct_0902_007",
+      "contractNo": "HT-2026-0902-007",
+      "subcontractorId": "sub_pujiang",
+      "projectId": "prj_lingang12",
+      "amount": 980000,
+      "pricingMethod": "综合单价",
+      "paymentMilestones": [
+        "材料进场 15%",
+        "绑扎完成 65%",
+        "验收 20%"
+      ],
+      "warranty": "钢筋隐蔽验收合格后进入质保，质量缺陷 72 小时返工。",
+      "changes": [],
+      "settlementStatus": "进度款中"
+    },
+    {
+      "id": "ct_0910_003",
+      "contractNo": "HT-2026-0910-003",
+      "subcontractorId": "sub_jiangnan",
+      "projectId": "prj_ct_podium",
+      "amount": 2140000,
+      "pricingMethod": "固定总价+变更签证",
+      "paymentMilestones": [
+        "合同备案 10%",
+        "板块进场 30%",
+        "安装完成 40%",
+        "验收 20%"
+      ],
+      "warranty": "幕墙五金及密封质保 5 年。",
+      "changes": [],
+      "settlementStatus": "未开始"
+    },
+    {
+      "id": "ct_0618_021",
+      "contractNo": "HT-2026-0618-021",
+      "subcontractorId": "sub_lingang",
+      "projectId": "prj_jiading3",
+      "amount": 540000,
+      "pricingMethod": "综合单价",
+      "paymentMilestones": [
+        "已付清"
+      ],
+      "warranty": "模板工程已验收，质保期至 2027-08-30。",
+      "changes": [
+        {
+          "at": "2026-07-12T00:00:00.000Z",
+          "note": "增加周转次数补偿",
+          "amountDelta": 18000
+        }
+      ],
+      "settlementStatus": "已结清"
+    }
+  ]
+}
