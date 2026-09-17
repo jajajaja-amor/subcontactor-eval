@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "strategy": "工具失败两次后切换 fallbackModel，仍失败则待人工接管",
+  "humanTakeoverAfterFailures": 2,
+  "message": "当前无法可靠完成查询，已为您转接现场值班客服。",
+  "updatedAt": "2026-09-17T08:00:00.000Z"
+}

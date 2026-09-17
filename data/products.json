@@ -1,0 +1,77 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "prd_masonry",
+      "name": "砌筑工程分包",
+      "category": "主体结构",
+      "unit": "立方米",
+      "unitPrice": 420,
+      "status": "可接单",
+      "leadDays": 5,
+      "coverage": [
+        "住宅",
+        "公建",
+        "厂房"
+      ],
+      "description": "含砖砌体、砌块墙、构造柱配合及现场砌筑质量控制。"
+    },
+    {
+      "id": "prd_rebar",
+      "name": "钢筋工程分包",
+      "category": "主体结构",
+      "unit": "吨",
+      "unitPrice": 1850,
+      "status": "可接单",
+      "leadDays": 4,
+      "coverage": [
+        "住宅",
+        "公建"
+      ],
+      "description": "含加工、绑扎、套筒连接及隐蔽验收配合。"
+    },
+    {
+      "id": "prd_formwork",
+      "name": "模板工程分包",
+      "category": "主体结构",
+      "unit": "平方米",
+      "unitPrice": 68,
+      "status": "可接单",
+      "leadDays": 3,
+      "coverage": [
+        "住宅",
+        "公建",
+        "市政"
+      ],
+      "description": "铝合金模板与木模组合，含支撑体系和拆模。"
+    },
+    {
+      "id": "prd_mep",
+      "name": "水电安装分包",
+      "category": "机电安装",
+      "unit": "项",
+      "unitPrice": 260000,
+      "status": "暂停接单",
+      "leadDays": 10,
+      "coverage": [
+        "住宅",
+        "精装"
+      ],
+      "description": "给排水、电气照明预埋及系统调试，当前班组档期已满。"
+    },
+    {
+      "id": "prd_facade",
+      "name": "幕墙工程分包",
+      "category": "装饰装修",
+      "unit": "平方米",
+      "unitPrice": 920,
+      "status": "可接单",
+      "leadDays": 14,
+      "coverage": [
+        "公建",
+        "商业"
+      ],
+      "description": "隐框玻璃幕墙与石材幕墙，含深化设计和抗风压检测配合。"
+    }
+  ]
+}

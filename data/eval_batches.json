@@ -1,0 +1,29 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "eb_09",
+      "name": "9 月第三周回归",
+      "status": "已完成",
+      "caseCount": 4,
+      "passRate": 0.75,
+      "startedAt": "2026-09-16T01:00:00.000Z"
+    },
+    {
+      "id": "eb_10",
+      "name": "物流限高专项",
+      "status": "待运行",
+      "caseCount": 6,
+      "passRate": null,
+      "startedAt": null
+    },
+    {
+      "id": "eb_fail",
+      "name": "优惠互斥冒烟",
+      "status": "失败",
+      "caseCount": 3,
+      "passRate": 0.33,
+      "startedAt": "2026-09-16T09:30:00.000Z"
+    }
+  ]
+}

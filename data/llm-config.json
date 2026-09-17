@@ -1,0 +1,8 @@
+{
+  "provider": "dashscope",
+  "model": "qwen2.5-72b-instruct",
+  "temperature": 0.2,
+  "maxTokens": 1200,
+  "fallbackModel": "qwen2.5-32b-instruct",
+  "updatedAt": "2026-09-17T08:00:00.000Z"
+}

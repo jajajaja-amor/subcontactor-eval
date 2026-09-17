@@ -1,0 +1,88 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "tck_10021",
+      "title": "12# 楼砌筑班组明日能否增援一层？",
+      "userId": "usr_chen",
+      "orderId": "ord_p3_masonry",
+      "channel": "微信",
+      "status": "处理中",
+      "priority": "高",
+      "skillId": "sk_schedule",
+      "assignee": "Agent/排班问询",
+      "createdAt": "2026-09-17T02:18:00.000Z",
+      "updatedAt": "2026-09-17T02:26:00.000Z",
+      "summary": "总包希望 9 月 18 日增加 8 名砌筑工，Skill 正在核对班组档期。"
+    },
+    {
+      "id": "tck_10018",
+      "title": "钢筋车在途，能否改卸西门？",
+      "userId": "usr_liu",
+      "orderId": "ord_p3_rebar",
+      "channel": "电话",
+      "status": "待人工接管",
+      "priority": "紧急",
+      "skillId": "sk_logistics",
+      "assignee": "待接管/现场调度",
+      "createdAt": "2026-09-17T05:42:00.000Z",
+      "updatedAt": "2026-09-17T05:51:00.000Z",
+      "summary": "西门限高 3.8 米，工具返回冲突后请求人工确认绕行方案。"
+    },
+    {
+      "id": "tck_10015",
+      "title": "幕墙合同进场补贴能否叠加秋季让利？",
+      "userId": "usr_zhao",
+      "orderId": "ord_ct_facade",
+      "channel": "邮件",
+      "status": "待处理",
+      "priority": "中",
+      "skillId": "sk_coupon",
+      "assignee": "Agent/优惠核销",
+      "createdAt": "2026-09-16T09:05:00.000Z",
+      "updatedAt": "2026-09-16T09:05:00.000Z",
+      "summary": "成本经理询问 JG-ENTRY-12K 与秋季进场让利是否互斥。"
+    },
+    {
+      "id": "tck_10009",
+      "title": "隐蔽验收不合格如何走返工？",
+      "userId": "usr_liu",
+      "orderId": "ord_p3_masonry",
+      "channel": "现场",
+      "status": "已解决",
+      "priority": "高",
+      "skillId": "sk_policy",
+      "assignee": "Agent/政策解释",
+      "createdAt": "2026-09-15T07:20:00.000Z",
+      "updatedAt": "2026-09-15T08:02:00.000Z",
+      "summary": "已按 72 小时返工政策给出步骤，现场已开整改单。"
+    },
+    {
+      "id": "tck_10003",
+      "title": "3# 厂房结算单缺安全资料",
+      "userId": "usr_chen",
+      "orderId": "ord_old_form",
+      "channel": "微信",
+      "status": "已关闭",
+      "priority": "低",
+      "skillId": "sk_settlement",
+      "assignee": "周倩",
+      "createdAt": "2026-09-12T03:44:00.000Z",
+      "updatedAt": "2026-09-13T01:10:00.000Z",
+      "summary": "补交安全标准化检查记录后完成结算关闭。"
+    },
+    {
+      "id": "tck_09988",
+      "title": "询问水电安装何时恢复接单",
+      "userId": "usr_zhao",
+      "channel": "电话",
+      "status": "已解决",
+      "priority": "中",
+      "skillId": "sk_catalog",
+      "assignee": "Agent/产品目录",
+      "createdAt": "2026-09-11T06:12:00.000Z",
+      "updatedAt": "2026-09-11T06:30:00.000Z",
+      "summary": "已告知水电安装暂停接单，预计 10 月中恢复。"
+    }
+  ]
+}

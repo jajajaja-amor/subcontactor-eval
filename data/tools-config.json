@@ -1,0 +1,7 @@
+{
+  "timeoutMs": 4000,
+  "maxRetries": 1,
+  "allowHumanOverride": true,
+  "sandbox": true,
+  "updatedAt": "2026-09-17T08:00:00.000Z"
+}

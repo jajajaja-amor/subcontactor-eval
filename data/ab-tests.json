@@ -1,0 +1,23 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "ab_coupon",
+      "name": "优惠核销提示语气",
+      "status": "进行中",
+      "controlSkillId": "sk_coupon",
+      "treatmentSkillId": "sk_coupon",
+      "metric": "一次解决率",
+      "trafficPercent": 20
+    },
+    {
+      "id": "ab_logistics",
+      "name": "物流冲突是否立即接管",
+      "status": "草稿",
+      "controlSkillId": "sk_logistics",
+      "treatmentSkillId": "sk_logistics",
+      "metric": "人工接管率",
+      "trafficPercent": 10
+    }
+  ]
+}

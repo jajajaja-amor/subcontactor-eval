@@ -1,0 +1,21 @@
+{
+  "updatedAt": "2026-09-17T08:00:00.000Z",
+  "items": [
+    {
+      "id": "an_01",
+      "runId": "run_90010",
+      "author": "周倩",
+      "issue": "卸货口限高未写入物流工具返回结构",
+      "suggestion": "query_logistics 增加 gateHeightMeters 与建议门岗字段",
+      "createdAt": "2026-09-17T06:05:00.000Z"
+    },
+    {
+      "id": "an_02",
+      "runId": "run_90007",
+      "author": "赵鸿",
+      "issue": "优惠互斥说明含糊",
+      "suggestion": "Skill 明确“进场补贴与秋季让利不可叠加”为硬规则",
+      "createdAt": "2026-09-16T11:20:00.000Z"
+    }
+  ]
+}
