@@ -36,7 +36,11 @@ export function buildToolArgs(name: string, question: string): ParsedToolArgs {
 
   switch (name) {
     case "query_subcontractors":
-      return { keyword: trade || "砌筑", region, trade };
+      return {
+        keyword: trade || "砌筑",
+        region: region === "临港" || region === "浦东" ? "上海" : region,
+        trade,
+      };
     case "query_projects":
       return { keyword: question.includes("临港") ? "临港" : region || trade || "临港" };
     case "query_contracts":
