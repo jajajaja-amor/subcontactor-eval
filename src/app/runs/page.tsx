@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { EmptyState } from "@/components/empty-state";
 import { PageHeader } from "@/components/page-header";
 import { StatusBadge, statusTone } from "@/components/status-badge";
@@ -17,12 +19,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { listAnnotations, listRatings, listRuns } from "@/lib/ops-repo";
+import { listRunRecords } from "@/lib/agent/run-records";
 
 export const dynamic = "force-dynamic";
 
 export default async function RunsPage() {
-  const [runs, ratings, annotations] = await Promise.all([
+  const [runs, records, ratings, annotations] = await Promise.all([
     listRuns(),
+    listRunRecords(),
     listRatings(),
     listAnnotations(),
   ]);
@@ -35,8 +39,48 @@ export default async function RunsPage() {
       />
       <Card>
         <CardHeader>
-          <CardTitle>Runs</CardTitle>
-          <CardDescription>{runs.items.length} 次演示运行。</CardDescription>
+          <CardTitle>Agent RunRecord</CardTitle>
+          <CardDescription>
+            主链路运行 {records.items.length} 条。点进详情可重试、接管和标注。
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {records.items.length === 0 ? (
+            <EmptyState title="暂无 Agent 运行" description="在工作台或 /demo 提问后会出现在这里。" />
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>ID</TableHead>
+                  <TableHead>来源</TableHead>
+                  <TableHead>状态</TableHead>
+                  <TableHead>问题</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {records.items.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-mono text-xs">
+                      <Link className="text-primary underline-offset-4 hover:underline" href={`/runs/${item.id}`}>
+                        {item.id}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{item.source}</TableCell>
+                    <TableCell>
+                      <StatusBadge label={item.status} tone={statusTone(item.status)} />
+                    </TableCell>
+                    <TableCell className="max-w-xl">{item.question}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>工单 Runs</CardTitle>
+          <CardDescription>{runs.items.length} 次工单 Skill 调用。</CardDescription>
         </CardHeader>
         <CardContent>
           {runs.items.length === 0 ? (

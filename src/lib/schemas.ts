@@ -201,6 +201,88 @@ export const agentRunSchema = z.object({
   summary: z.string(),
 });
 
+export const mandatoryCapabilitySchema = z.enum([
+  "subcontractor-matching",
+  "matching-reason",
+  "quote-reasoning",
+  "price-calculation",
+  "order-query",
+  "logistics-query",
+  "qualification-check",
+  "risk-check",
+  "human-handoff",
+]);
+
+export const agentPlanSchema = z.object({
+  selectedSkills: z.array(z.string()),
+  selectedTools: z.array(z.string()),
+  reasoning: z.string(),
+  mandatoryCapabilities: z.array(mandatoryCapabilitySchema),
+  risk: z.object({
+    level: z.enum(["低", "中", "高"]),
+    flags: z.array(z.string()),
+    requiresHandoff: z.boolean(),
+    summary: z.string(),
+  }),
+  degradation: z
+    .object({
+      needed: z.boolean(),
+      reason: z.string(),
+      handoff: z.boolean(),
+    })
+    .optional(),
+  parseFallback: z.boolean().optional(),
+  validationIssues: z
+    .array(
+      z.object({
+        code: z.string(),
+        message: z.string(),
+        severity: z.enum(["info", "red", "block"]),
+        capability: mandatoryCapabilitySchema.optional(),
+      }),
+    )
+    .optional(),
+});
+
+export const agentStepSchema = z.object({
+  stepId: z.string(),
+  type: z.enum(["planner", "validator", "skill", "tool", "risk-check", "reply"]),
+  name: z.string(),
+  input: z.unknown(),
+  output: z.unknown(),
+  durationMs: z.number().int(),
+  status: z.enum(["成功", "失败", "进行中", "跳过"]),
+  error: z.string().optional(),
+});
+
+export const riskResultSchema = z.object({
+  blocked: z.boolean(),
+  requiresHandoff: z.boolean(),
+  level: z.enum(["低", "中", "高"]),
+  reasons: z.array(z.string()),
+  rewrittenReply: z.string().optional(),
+  passed: z.boolean(),
+});
+
+export const runRecordSchema = z.object({
+  id: z.string(),
+  question: z.string(),
+  source: z.enum(["web", "demo", "api", "retry", "handoff"]),
+  conversationId: z.string(),
+  createdAt: z.string(),
+  status: z.enum(["成功", "失败", "进行中", "已接管"]),
+  finalReply: z.string(),
+  plan: agentPlanSchema.nullable(),
+  steps: z.array(agentStepSchema),
+  riskResult: riskResultSchema.nullable(),
+  durationMs: z.number().int(),
+  error: z.string().optional(),
+  provider: z.enum(["coze", "openai-compatible", "classroom-fixture"]),
+  model: z.string(),
+  skillVersions: z.record(z.string(), z.string()),
+  toolVersions: z.record(z.string(), z.string()),
+});
+
 export const ratingSchema = z.object({
   id: z.string(),
   runId: z.string(),
@@ -382,3 +464,4 @@ export const projectsCollectionSchema = collectionSchema(projectSchema);
 export const contractsCollectionSchema = collectionSchema(contractSchema);
 export const qualificationsCollectionSchema = collectionSchema(qualificationSchema);
 export const handoffRulesCollectionSchema = collectionSchema(handoffRuleSchema);
+export const runRecordsCollectionSchema = collectionSchema(runRecordSchema);

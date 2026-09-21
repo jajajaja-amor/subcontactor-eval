@@ -10,6 +10,8 @@ import {
   Hammer,
   LayoutDashboard,
   Menu,
+  MessageSquare,
+  Bot,
   PlayCircle,
   Settings2,
   Sparkles,
@@ -22,7 +24,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/", label: "总览", icon: LayoutDashboard },
+  { href: "/", label: "工作台", icon: MessageSquare },
+  { href: "/demo", label: "演示", icon: Bot },
+  { href: "/overview", label: "总览", icon: LayoutDashboard },
   { href: "/tickets", label: "工单", icon: ClipboardList },
   { href: "/skills", label: "Skills", icon: Sparkles },
   { href: "/tools", label: "Tools", icon: Wrench },
