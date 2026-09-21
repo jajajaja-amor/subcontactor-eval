@@ -30,15 +30,22 @@ function bumpPatch(version: string) {
   return `${parts[0]}.${parts[1]}.${parts[2] + 1}`;
 }
 
+async function attachPrompt(skill: Skill) {
+  try {
+    return { ...skill, systemPrompt: await readSkillFile(skill.filePath) };
+  } catch {
+    return { ...skill, systemPrompt: "" };
+  }
+}
+
 export async function listEnabledSkills() {
   const skills = await listSkills();
-  const enabled = skills.items.filter((item) => item.enabled);
-  return Promise.all(
-    enabled.map(async (skill) => ({
-      ...skill,
-      systemPrompt: await readSkillFile(skill.filePath),
-    })),
-  );
+  return Promise.all(skills.items.filter((item) => item.enabled).map(attachPrompt));
+}
+
+export async function listSkillsWithPrompts() {
+  const skills = await listSkills();
+  return Promise.all(skills.items.map(attachPrompt));
 }
 
 export async function getEnabledCapabilities() {

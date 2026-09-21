@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { listSkills, listTools } from "@/lib/ops-repo";
-import { readSkillFile } from "@/lib/skill-files";
-import { getEnabledCapabilities } from "@/lib/skill-registry";
+import { listTools } from "@/lib/ops-repo";
+import { getEnabledCapabilities, listSkillsWithPrompts } from "@/lib/skill-registry";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -22,16 +21,10 @@ export async function GET(request: Request) {
     });
   }
 
-  const [skillCollection, toolCollection] = await Promise.all([
-    listSkills(),
+  const [skills, toolCollection] = await Promise.all([
+    listSkillsWithPrompts(),
     listTools(),
   ]);
-  const skills = await Promise.all(
-    skillCollection.items.map(async (skill) => ({
-      ...skill,
-      systemPrompt: await readSkillFile(skill.filePath),
-    })),
-  );
   const tools = toolCollection.items;
 
   return NextResponse.json({

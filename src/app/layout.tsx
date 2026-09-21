@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Noto_Sans_SC } from "next/font/google";
+import type { ReactNode } from "react";
 
 import { AppProviders } from "@/components/providers";
 import { AppShell } from "@/components/app-shell";
@@ -24,7 +25,9 @@ export const metadata: Metadata = {
   description: "建筑分包商客服 Agent / Planner / Skill / Tool / Eval 运营平台",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   return (
     <html
       lang="zh-CN"
