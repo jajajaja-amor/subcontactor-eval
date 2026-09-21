@@ -21,4 +21,9 @@ export const REQUIRED_DATA_FILES = [
   "ab-tests.json",
   "llm-config.json",
   "runtime-fallback.json",
+  "subcontractors.json",
+  "projects.json",
+  "contracts.json",
+  "qualifications.json",
+  "handoff-rules.json",
 ] as const;

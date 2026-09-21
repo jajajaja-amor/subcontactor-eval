@@ -5,33 +5,95 @@
       "id": "usr_chen",
       "name": "陈建国",
       "role": "总包项目经理",
+      "party": "项目方",
       "company": "中建华东第三项目部",
       "phone": "138****1208",
-      "status": "正常"
+      "status": "正常",
+      "history": [
+        "临港新城 12#",
+        "嘉定 3# 厂房"
+      ],
+      "preferences": [
+        "先给可进场日期",
+        "进度款走加急需他签批"
+      ]
     },
     {
       "id": "usr_liu",
       "name": "刘敏",
       "role": "现场代表",
+      "party": "项目方",
       "company": "中建华东第三项目部",
       "phone": "139****6631",
-      "status": "正常"
+      "status": "正常",
+      "history": [
+        "临港新城 12#"
+      ],
+      "preferences": [
+        "卸货口变化要立刻同步"
+      ]
     },
     {
       "id": "usr_zhao",
       "name": "赵鸿",
       "role": "成本经理",
+      "party": "项目方",
       "company": "城投建设总承包部",
       "phone": "137****4419",
-      "status": "正常"
+      "status": "正常",
+      "history": [
+        "城投金融中心裙楼"
+      ],
+      "preferences": [
+        "优惠是否叠加必须书面口径"
+      ]
     },
     {
       "id": "usr_cs",
       "name": "周倩",
       "role": "内部客服",
+      "party": "内部",
       "company": "SubcontractOps 运营中心",
       "phone": "021-****6612",
-      "status": "正常"
+      "status": "正常",
+      "history": [
+        "值班接管"
+      ],
+      "preferences": [
+        "夜间只升级现场调度"
+      ]
+    },
+    {
+      "id": "usr_gao",
+      "name": "高磊",
+      "role": "分包项目经理",
+      "party": "分包商",
+      "company": "沪东砌筑劳务有限公司",
+      "phone": "136****2201",
+      "status": "正常",
+      "subcontractorId": "sub_hudong",
+      "history": [
+        "临港 12# 砌筑"
+      ],
+      "preferences": [
+        "增援需提前 12 小时"
+      ]
+    },
+    {
+      "id": "usr_wu",
+      "name": "吴芳",
+      "role": "分包商联系人",
+      "party": "分包商",
+      "company": "江南幕墙装饰有限公司",
+      "phone": "151****9088",
+      "status": "正常",
+      "subcontractorId": "sub_jiangnan",
+      "history": [
+        "城投裙楼报价"
+      ],
+      "preferences": [
+        "只走对公账户"
+      ]
     }
   ]
 }

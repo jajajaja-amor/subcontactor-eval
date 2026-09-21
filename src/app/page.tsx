@@ -78,9 +78,9 @@ export default async function HomePage() {
           hint={`主模型 ${overview.llmModel}`}
         />
         <Metric
-          label="已发布 Skill"
+          label="已启用 Skill"
           value={String(overview.publishedSkills)}
-          hint={`已启用 Tool ${overview.enabledTools} 个`}
+          hint={`已启用 Skill ${overview.publishedSkills} · Tool ${overview.enabledTools}`}
         />
         <Metric
           label="运行评分"
@@ -110,17 +110,26 @@ export default async function HomePage() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             <p>
-              <StatusBadge label={`客户 ${overview.users} 人`} tone="info" />
+              <StatusBadge label={`分包商 ${overview.subcontractors} 家`} tone="info" />
             </p>
             <p>
-              <StatusBadge label={`在册合同 ${overview.orders} 份`} tone="success" />
+              <StatusBadge label={`项目 ${overview.projects} 个`} tone="success" />
+            </p>
+            <p>
+              <StatusBadge label={`合同 ${overview.contracts} 份 · 工单 ${overview.orders} 张`} />
             </p>
             <p className="text-muted-foreground">
-              知识库覆盖进场资料、进度款、返工政策和优惠核销。
+              联系人 {overview.users} 人。启用 Skill {overview.publishedSkills} 个，启用 Tool{" "}
+              {overview.enabledTools} 个。
             </p>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/knowledge">打开知识库</Link>
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link href="/catalog">打开业务目录</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/knowledge">打开知识库</Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

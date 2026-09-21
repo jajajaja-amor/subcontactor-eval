@@ -1,6 +1,15 @@
 import "server-only";
 
-import { listOrders, listProducts, listUsers } from "@/lib/catalog-repo";
+import {
+  listContracts,
+  listLogistics,
+  listOrders,
+  listProducts,
+  listProjects,
+  listQualifications,
+  listSubcontractors,
+  listUsers,
+} from "@/lib/catalog-repo";
 import { REQUIRED_DATA_FILES } from "@/lib/data-files";
 import {
   listAbTests,
@@ -12,7 +21,9 @@ import {
   listSkillVersions,
   listSkills,
   listTickets,
+  listTools,
 } from "@/lib/ops-repo";
+import { readSkillFile } from "@/lib/skill-files";
 import { inspectDataFile } from "@/lib/store";
 
 export type IntegrityIssue = {
@@ -56,6 +67,12 @@ export async function checkDataIntegrity(): Promise<{
     cases,
     batches,
     abTests,
+    subcontractors,
+    projects,
+    contracts,
+    qualifications,
+    logistics,
+    tools,
   ] = await Promise.all([
     listUsers(),
     listProducts(),
@@ -69,6 +86,12 @@ export async function checkDataIntegrity(): Promise<{
     listEvalCases(),
     listEvalBatches(),
     listAbTests(),
+    listSubcontractors(),
+    listProjects(),
+    listContracts(),
+    listQualifications(),
+    listLogistics(),
+    listTools(),
   ]);
 
   const userIds = new Set(users.items.map((item) => item.id));
@@ -78,6 +101,9 @@ export async function checkDataIntegrity(): Promise<{
   const skillIds = new Set(skills.items.map((item) => item.id));
   const runIds = new Set(runs.items.map((item) => item.id));
   const caseIds = new Set(cases.items.map((item) => item.id));
+  const subcontractorIds = new Set(subcontractors.items.map((item) => item.id));
+  const projectIds = new Set(projects.items.map((item) => item.id));
+  const toolNames = new Set(tools.items.map((item) => item.name));
 
   for (const order of orders.items) {
     if (!productIds.has(order.productId)) {
@@ -90,6 +116,60 @@ export async function checkDataIntegrity(): Promise<{
       issues.push({
         code: "dangling_user",
         message: `合同 ${order.id} 引用了不存在的用户 ${order.userId}`,
+      });
+    }
+    if (!subcontractorIds.has(order.subcontractorId)) {
+      issues.push({
+        code: "dangling_subcontractor",
+        message: `工单 ${order.id} 引用了不存在的分包商 ${order.subcontractorId}`,
+      });
+    }
+    if (!projectIds.has(order.projectId)) {
+      issues.push({
+        code: "dangling_project",
+        message: `工单 ${order.id} 引用了不存在的项目 ${order.projectId}`,
+      });
+    }
+  }
+
+  for (const user of users.items) {
+    if (user.subcontractorId && !subcontractorIds.has(user.subcontractorId)) {
+      issues.push({
+        code: "dangling_subcontractor",
+        message: `用户 ${user.id} 引用了不存在的分包商 ${user.subcontractorId}`,
+      });
+    }
+  }
+
+  for (const contract of contracts.items) {
+    if (!subcontractorIds.has(contract.subcontractorId)) {
+      issues.push({
+        code: "dangling_subcontractor",
+        message: `合同 ${contract.contractNo} 引用了不存在的分包商 ${contract.subcontractorId}`,
+      });
+    }
+    if (!projectIds.has(contract.projectId)) {
+      issues.push({
+        code: "dangling_project",
+        message: `合同 ${contract.contractNo} 引用了不存在的项目 ${contract.projectId}`,
+      });
+    }
+  }
+
+  for (const qualification of qualifications.items) {
+    if (!subcontractorIds.has(qualification.subcontractorId)) {
+      issues.push({
+        code: "dangling_subcontractor",
+        message: `资质 ${qualification.id} 引用了不存在的分包商 ${qualification.subcontractorId}`,
+      });
+    }
+  }
+
+  for (const record of logistics.items) {
+    if (!orderIds.has(record.orderId)) {
+      issues.push({
+        code: "dangling_order",
+        message: `物流 ${record.id} 引用了不存在的工单 ${record.orderId}`,
       });
     }
   }
@@ -111,6 +191,18 @@ export async function checkDataIntegrity(): Promise<{
       issues.push({
         code: "dangling_skill",
         message: `工单 ${ticket.id} 引用了不存在的 Skill ${ticket.skillId}`,
+      });
+    }
+    if (ticket.projectId && !projectIds.has(ticket.projectId)) {
+      issues.push({
+        code: "dangling_project",
+        message: `工单 ${ticket.id} 引用了不存在的项目 ${ticket.projectId}`,
+      });
+    }
+    if (ticket.subcontractorId && !subcontractorIds.has(ticket.subcontractorId)) {
+      issues.push({
+        code: "dangling_subcontractor",
+        message: `工单 ${ticket.id} 引用了不存在的分包商 ${ticket.subcontractorId}`,
       });
     }
   }
@@ -189,6 +281,25 @@ export async function checkDataIntegrity(): Promise<{
         code: "dangling_skill",
         message: `A/B ${test.id} 引用了不存在的 Skill`,
       });
+    }
+  }
+
+  for (const skill of skills.items) {
+    try {
+      await readSkillFile(skill.filePath);
+    } catch {
+      issues.push({
+        code: "missing_skill_file",
+        message: `Skill ${skill.id} 的文件 ${skill.filePath} 无法读取`,
+      });
+    }
+    for (const toolName of skill.requiredTools) {
+      if (!toolNames.has(toolName)) {
+        issues.push({
+          code: "dangling_tool",
+          message: `Skill ${skill.id} 依赖未注册的 Tool ${toolName}`,
+        });
+      }
     }
   }
 

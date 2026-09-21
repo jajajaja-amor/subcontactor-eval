@@ -28,14 +28,43 @@ export function StatusBadge({
 
 export function statusTone(status: string): keyof typeof TONE_CLASS {
   if (
-    ["可接单", "进行中", "可领取", "正常", "已发布", "已启用", "成功", "已解决", "已完成", "已上线", "当前"].includes(
+    [
+      "可接单",
+      "进行中",
+      "可领取",
+      "正常",
+      "已发布",
+      "已启用",
+      "成功",
+      "已解决",
+      "已完成",
+      "已上线",
+      "当前",
+      "可合作",
+      "在施",
+      "有效",
+      "已结清",
+    ].includes(
       status,
     )
   ) {
     return "success";
   }
   if (
-    ["暂停接单", "待处理", "处理中", "待运行", "草稿", "调试中", "待评估", "待进场"].includes(
+    [
+      "暂停接单",
+      "待处理",
+      "处理中",
+      "待运行",
+      "草稿",
+      "调试中",
+      "待评估",
+      "待进场",
+      "观察",
+      "筹备",
+      "即将过期",
+      "进度款中",
+    ].includes(
       status,
     )
   ) {
@@ -51,6 +80,12 @@ export function statusTone(status: string): keyof typeof TONE_CLASS {
       "待人工接管",
       "紧急",
       "已拒绝",
+      "黑名单",
+      "缺失",
+      "过期",
+      "拉黑",
+      "预警",
+      "争议中",
     ].includes(status)
   ) {
     return "danger";

@@ -1,6 +1,12 @@
 import "server-only";
 
-import { listOrders, listUsers } from "@/lib/catalog-repo";
+import {
+  listContracts,
+  listOrders,
+  listProjects,
+  listSubcontractors,
+  listUsers,
+} from "@/lib/catalog-repo";
 import {
   getLlmConfig,
   getRuntimeFallback,
@@ -32,6 +38,9 @@ export type OverviewData = {
   volume: TicketVolumePoint[];
   users: number;
   orders: number;
+  subcontractors: number;
+  projects: number;
+  contracts: number;
 };
 
 function startOfDay(iso: string): string {
@@ -54,6 +63,9 @@ export async function getOverviewData(): Promise<OverviewData> {
     fallback,
     users,
     orders,
+    subcontractors,
+    projects,
+    contracts,
   ] = await Promise.all([
     listTickets(),
     listRuns(),
@@ -64,6 +76,9 @@ export async function getOverviewData(): Promise<OverviewData> {
     getRuntimeFallback(),
     listUsers(),
     listOrders(),
+    listSubcontractors(),
+    listProjects(),
+    listContracts(),
   ]);
 
   const today = new Date().toISOString().slice(0, 10);
@@ -98,9 +113,8 @@ export async function getOverviewData(): Promise<OverviewData> {
       .length,
     todayRuns: runs.items.filter((run) => startOfDay(run.startedAt) === today)
       .length,
-    publishedSkills: skills.items.filter((skill) => skill.status === "已发布")
-      .length,
-    enabledTools: tools.items.filter((tool) => tool.status === "已启用").length,
+    publishedSkills: skills.items.filter((skill) => skill.enabled).length,
+    enabledTools: tools.items.filter((tool) => tool.enabled).length,
     averageScore,
     llmModel: llm.model,
     fallbackEnabled: fallback.enabled,
@@ -113,5 +127,8 @@ export async function getOverviewData(): Promise<OverviewData> {
     volume,
     users: users.items.length,
     orders: orders.items.length,
+    subcontractors: subcontractors.items.length,
+    projects: projects.items.length,
+    contracts: contracts.items.length,
   };
 }

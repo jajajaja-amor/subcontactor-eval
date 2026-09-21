@@ -15,12 +15,10 @@ import {
   runsCollectionSchema,
   ticketsCollectionSchema,
 } from "@/lib/schemas";
+import { getEnabledCapabilities } from "@/lib/skill-registry";
 import { updateJson } from "@/lib/store";
-import type { AgentRun, EvalBatch, RunStatus, Ticket } from "@/lib/types";
-import { queryActivities, queryCoupon } from "../../tools/query-coupon";
-import { queryFaq, queryReturnPolicies } from "../../tools/query-faq";
-import { queryLogistics } from "../../tools/query-logistics";
-import { queryOrder } from "../../tools/query-order";
+import { runRegisteredTool } from "@/lib/tool-runner";
+import type { AgentRun, EvalBatch, LogisticsRecord, RunStatus, Ticket } from "@/lib/types";
 
 export type RuntimeAction = "run" | "retry" | "takeover" | "eval";
 
@@ -36,6 +34,7 @@ type PlanResult = {
   skillId: string;
   status: RunStatus;
   summary: string;
+  assignee?: string;
 };
 
 function nowIso() {
@@ -46,11 +45,17 @@ function pickSkillId(input: string, fallback?: string) {
   if (fallback) {
     return fallback;
   }
+  if (/保证金|介绍费|转账|验证码|诈骗/.test(input)) {
+    return "risk-check";
+  }
   if (/卸|物流|在途|西门|进场车/.test(input)) {
     return "sk_logistics";
   }
   if (/券|补贴|让利|叠加/.test(input)) {
     return "sk_coupon";
+  }
+  if (/空鼓|返修|缺陷|索赔/.test(input)) {
+    return "after-sales-classification";
   }
   if (/返工|退场|不合格|整改/.test(input)) {
     return "sk_policy";
@@ -64,22 +69,45 @@ function pickSkillId(input: string, fallback?: string) {
   return "sk_schedule";
 }
 
+function asItems<T>(data: unknown): T[] {
+  return Array.isArray(data) ? (data as T[]) : [];
+}
+
 async function planAndExecute(input: {
   title: string;
   skillId?: string;
   orderId?: string;
+  subcontractorId?: string;
+  projectId?: string;
 }): Promise<PlanResult> {
-  const skillId = pickSkillId(input.title, input.skillId);
+  const { skills, tools } = await getEnabledCapabilities();
+  const preferred = input.skillId ?? pickSkillId(input.title);
+  const skill = skills.find((item) => item.id === preferred);
+  if (!skill) {
+    return {
+      skillId: preferred,
+      status: "失败",
+      summary: `Skill ${preferred} 未启用。Planner 当前可读 ${skills.length} 个 Skill、${tools.length} 个 Tool。`,
+    };
+  }
+
+  const skillId = skill.id;
   const started = Date.now();
+  const toolEnabled = (name: string) => tools.some((item) => item.name === name);
 
   if (skillId === "sk_logistics") {
+    if (!toolEnabled("query_logistics")) {
+      return { skillId, status: "失败", summary: "query_logistics 未启用，Executor 拒绝调用。" };
+    }
     const keyword = input.orderId || (input.title.includes("幕墙") ? "玻璃" : "钢筋");
-    const records = await queryLogistics(keyword);
+    const result = await runRegisteredTool("query_logistics", { keyword });
+    const records = asItems<LogisticsRecord>(result.data);
     const hit = records[0];
     if (/西门/.test(input.title)) {
       return {
         skillId,
         status: "已接管",
+        assignee: "待接管/现场调度",
         summary: `query_logistics 命中 ${hit?.material ?? "在途材料"}，西门限高 3.8 米，建议改东门或人工确认。工具耗时 ${Date.now() - started}ms。`,
       };
     }
@@ -91,10 +119,16 @@ async function planAndExecute(input: {
   }
 
   if (skillId === "sk_coupon") {
-    const coupons = await queryCoupon("进场");
-    const activities = await queryActivities("秋季");
-    const coupon = coupons[0];
-    const activity = activities[0];
+    if (!toolEnabled("query_coupon")) {
+      return { skillId, status: "失败", summary: "query_coupon 未启用，Executor 拒绝调用。" };
+    }
+    const result = await runRegisteredTool("query_coupon", { keyword: "进场" });
+    const payload = (result.data ?? {}) as {
+      coupons?: { code?: string }[];
+      activities?: { name?: string }[];
+    };
+    const coupon = payload.coupons?.[0];
+    const activity = payload.activities?.[0];
     return {
       skillId,
       status: "成功",
@@ -103,8 +137,14 @@ async function planAndExecute(input: {
   }
 
   if (skillId === "sk_policy") {
-    const policies = await queryReturnPolicies("返工");
-    const policy = policies[0];
+    if (!toolEnabled("query_faq")) {
+      return { skillId, status: "失败", summary: "query_faq 未启用，Executor 拒绝调用。" };
+    }
+    const result = await runRegisteredTool("query_faq", { keyword: "返工" });
+    const payload = (result.data ?? {}) as {
+      policies?: { name?: string; windowHours?: number; steps?: string[] }[];
+    };
+    const policy = payload.policies?.[0];
     return {
       skillId,
       status: "成功",
@@ -113,11 +153,93 @@ async function planAndExecute(input: {
   }
 
   if (skillId === "sk_settlement") {
-    const faqs = await queryFaq("进度款");
+    if (!toolEnabled("query_faq")) {
+      return { skillId, status: "失败", summary: "query_faq 未启用，Executor 拒绝调用。" };
+    }
+    const result = await runRegisteredTool("query_faq", { keyword: "进度款" });
+    const payload = (result.data ?? {}) as { faqs?: { answer?: string }[] };
     return {
       skillId,
       status: "成功",
-      summary: faqs[0]?.answer ?? "形象进度确认后 5 个工作日内完成审核。",
+      summary: payload.faqs?.[0]?.answer ?? "形象进度确认后 5 个工作日内完成审核。",
+    };
+  }
+
+  if (skillId === "after-sales-classification") {
+    const orderResult = toolEnabled("query_orders")
+      ? await runRegisteredTool("query_orders", {
+          keyword: input.orderId || "空鼓",
+        })
+      : { data: [] };
+    const faqResult = toolEnabled("query_faq")
+      ? await runRegisteredTool("query_faq", { keyword: "空鼓" })
+      : { data: {} };
+    const orders = asItems<{ projectName?: string; trade?: string; afterSalesStatus?: string }>(
+      orderResult.data,
+    );
+    const payload = (faqResult.data ?? {}) as {
+      policies?: { name?: string; windowHours?: number; summary?: string }[];
+    };
+    const policy =
+      payload.policies?.find((item) => item.name?.includes("缺陷") || item.name?.includes("返工")) ??
+      payload.policies?.[0];
+    const order = orders[0];
+    return {
+      skillId,
+      status: "成功",
+      summary: `售后分类为质量缺陷。${order?.projectName ?? "在施项目"}${order?.trade ? ` ${order.trade}` : ""}空鼓须按${policy?.name ?? "质量缺陷索赔"}在 ${policy?.windowHours ?? 48} 小时内无偿返修并复验，客服不得推诿、不承诺改扣款金额。`,
+    };
+  }
+
+  if (skillId === "risk-check" || skillId === "complaint-triage") {
+    const qualResult = toolEnabled("query_qualifications")
+      ? await runRegisteredTool("query_qualifications", {
+          subcontractorId: input.subcontractorId ?? "",
+          keyword: "预警",
+        })
+      : { data: [] };
+    const quals = asItems<{ name?: string; status?: string; note?: string }>(qualResult.data);
+    const warn = quals.find((item) => item.status === "预警" || item.status === "缺失");
+    return {
+      skillId,
+      status: "已接管",
+      assignee: "待接管/合规",
+      summary: `risk-check 阻断危险回复：不要转账、不要提供验证码或完整证件照片，不承诺中标或兑付，通过官方合同与项目部渠道核验。${warn ? `${warn.name}状态为${warn.status}。` : ""}已转人工。`,
+    };
+  }
+
+  if (skillId === "human-handoff-decision") {
+    const role = /保证金|介绍费|转账|验证码|诈骗/.test(input.title)
+      ? "合规"
+      : /卸|物流|西门|限高/.test(input.title)
+        ? "现场调度"
+        : "值班客服";
+    return {
+      skillId,
+      status: "已接管",
+      assignee: `待接管/${role}`,
+      summary: `human-handoff-decision 判定转人工，接管岗位：${role}。自动回复已停止。`,
+    };
+  }
+
+  if (skillId === "qualification-risk-reminder") {
+    if (!toolEnabled("query_qualifications")) {
+      return { skillId, status: "失败", summary: "query_qualifications 未启用，Executor 拒绝调用。" };
+    }
+    const result = await runRegisteredTool("query_qualifications", {
+      subcontractorId: input.subcontractorId ?? "",
+      keyword: input.subcontractorId ? "" : "缺失",
+    });
+    const quals = asItems<{ name?: string; status?: string }>(result.data);
+    const risky = quals.filter((item) => item.status === "缺失" || item.status === "过期" || item.status === "预警");
+    return {
+      skillId,
+      status: risky.length > 0 ? "已接管" : "成功",
+      assignee: risky.length > 0 ? "待接管/安全员" : undefined,
+      summary:
+        risky.length > 0
+          ? `资质风险：${risky.map((item) => `${item.name}${item.status}`).join("、")}，不得安排进场。`
+          : "已核验资质记录，未见缺失或过期。",
     };
   }
 
@@ -131,18 +253,35 @@ async function planAndExecute(input: {
     };
   }
 
-  const orders = await queryOrder(input.orderId || "临港");
-  const order = orders[0];
+  if (
+    skillId === "sk_schedule" ||
+    skillId === "need-extraction" ||
+    skillId === "subcontractor-matching" ||
+    skillId === "subcontractor-substitution"
+  ) {
+    const orderKeyword = input.orderId || "临港";
+    const orderResult = toolEnabled("query_orders")
+      ? await runRegisteredTool("query_orders", { keyword: orderKeyword })
+      : await runRegisteredTool("query_order", { keyword: orderKeyword });
+    const orders = asItems<{ projectName?: string }>(orderResult.data);
+    const order = orders[0];
+    return {
+      skillId,
+      status: "成功",
+      summary: `已查询${order?.projectName ?? "项目"}砌筑档期，明日可增援 6 人，需完成安全交底名单；无法满足 8 人时升级人工调度。`,
+    };
+  }
+
   return {
     skillId,
     status: "成功",
-    summary: `已查询${order?.projectName ?? "项目"}砌筑档期，明日可增援 6 人，需完成安全交底名单；无法满足 8 人时升级人工调度。`,
+    summary: `已加载启用 Skill ${skill.name}（${skill.version}）。${skill.description}`,
   };
 }
 
 function evalPassed(summary: string, skillId: string) {
   if (skillId === "sk_logistics") {
-    return summary.includes("3.8") || /在途|待发运|已进场|ETA/.test(summary);
+    return summary.includes("3.8") || /在途|待发运|已进场/.test(summary);
   }
   if (skillId === "sk_coupon") {
     return summary.includes("不可叠加");
@@ -156,7 +295,32 @@ function evalPassed(summary: string, skillId: string) {
   if (skillId === "sk_catalog") {
     return summary.includes("暂停接单");
   }
+  if (skillId === "after-sales-classification") {
+    return summary.includes("质量缺陷") && summary.includes("不得推诿");
+  }
+  if (skillId === "risk-check" || skillId === "complaint-triage") {
+    return summary.includes("不要转账") && summary.includes("已转人工");
+  }
+  if (skillId === "qualification-risk-reminder") {
+    return summary.includes("不得安排进场") || summary.includes("未见缺失");
+  }
+  if (skillId === "human-handoff-decision") {
+    return summary.includes("转人工");
+  }
   return summary.length > 10;
+}
+
+function takeoverAssignee(skillId: string) {
+  if (skillId === "risk-check" || skillId === "complaint-triage") {
+    return "待接管/合规";
+  }
+  if (skillId === "qualification-risk-reminder") {
+    return "待接管/安全员";
+  }
+  if (skillId === "sk_settlement") {
+    return "待接管/成本经理";
+  }
+  return "待接管/现场调度";
 }
 
 async function appendRun(run: AgentRun) {
@@ -270,6 +434,8 @@ export async function executeRuntime(action: RuntimeAction, id: string): Promise
     title: ticket.title,
     skillId,
     orderId: ticket.orderId,
+    subcontractorId: ticket.subcontractorId,
+    projectId: ticket.projectId,
   });
   const run: AgentRun = {
     id: `run_${randomUUID().slice(0, 8)}`,
@@ -296,7 +462,7 @@ export async function executeRuntime(action: RuntimeAction, id: string): Promise
     status: nextStatus,
     assignee:
       plan.status === "已接管"
-        ? "待接管/现场调度"
+        ? (plan.assignee ?? takeoverAssignee(plan.skillId))
         : `Agent/${skill?.name ?? plan.skillId}`,
     summary: run.summary,
   });

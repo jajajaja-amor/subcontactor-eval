@@ -2,25 +2,394 @@
   "updatedAt": "2026-09-17T08:00:00.000Z",
   "items": [
     {
-      "id": "tool_query_order",
-      "name": "query_order",
-      "description": "按合同号或项目名称查询分包订单状态。",
+      "id": "query_subcontractors",
+      "name": "query_subcontractors",
+      "description": "按工种、区域、档期查询分包商。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "description": "名称、区域或工种关键词"
+          },
+          "region": {
+            "type": "string"
+          },
+          "trade": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "keyword": "砌筑",
+        "region": "上海"
+      },
       "status": "已启用",
       "risk": "低",
-      "endpoint": "internal://tools/query-order"
+      "endpoint": "internal://tools/query-subcontractors"
     },
     {
-      "id": "tool_query_logistics",
+      "id": "query_projects",
+      "name": "query_projects",
+      "description": "查询项目名称、类型、标段、分包需求和状态。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "description": "名称、区域或工种关键词"
+          },
+          "region": {
+            "type": "string"
+          },
+          "trade": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "keyword": "临港"
+      },
+      "status": "已启用",
+      "risk": "低",
+      "endpoint": "internal://tools/query-projects"
+    },
+    {
+      "id": "query_contracts",
+      "name": "query_contracts",
+      "description": "查询合同金额、计价方式、付款节点和结算状态。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          },
+          "contractNo": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "keyword": "HT-2026"
+      },
+      "status": "已启用",
+      "risk": "中",
+      "endpoint": "internal://tools/query-contracts"
+    },
+    {
+      "id": "calculate_price",
+      "name": "calculate_price",
+      "description": "按工种、工程量和区域估算合价，并校验报价区间。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "trade": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "region": {
+            "type": "string"
+          },
+          "subcontractorId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "trade",
+          "quantity"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "unitPrice": {
+            "type": "number"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "trade": "砌筑",
+        "quantity": 100,
+        "region": "上海"
+      },
+      "status": "已启用",
+      "risk": "中",
+      "endpoint": "internal://tools/calculate-price"
+    },
+    {
+      "id": "query_orders",
+      "name": "query_orders",
+      "description": "查询工单/订单的工程量、金额、进度和验收状态。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          },
+          "workOrderNo": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "keyword": "WO-2026"
+      },
+      "status": "已启用",
+      "risk": "低",
+      "endpoint": "internal://tools/query-orders"
+    },
+    {
+      "id": "query_logistics",
       "name": "query_logistics",
       "description": "查询材料进场物流位置与 ETA。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "keyword": "钢筋"
+      },
       "status": "已启用",
       "risk": "低",
       "endpoint": "internal://tools/query-logistics"
     },
     {
+      "id": "query_qualifications",
+      "name": "query_qualifications",
+      "description": "查询安全生产许可证、特种作业证、保险和预警。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          },
+          "subcontractorId": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "keyword": "缺失",
+        "subcontractorId": "sub_xinjin"
+      },
+      "status": "已启用",
+      "risk": "高",
+      "endpoint": "internal://tools/query-qualifications"
+    },
+    {
+      "id": "tool_query_order",
+      "name": "query_order",
+      "description": "兼容旧订单查询。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "keyword": "临港"
+      },
+      "status": "已启用",
+      "risk": "低",
+      "endpoint": "internal://tools/query-order"
+    },
+    {
       "id": "tool_query_coupon",
       "name": "query_coupon",
       "description": "核验优惠券状态、门槛和互斥规则。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "keyword": "进场"
+      },
       "status": "已启用",
       "risk": "中",
       "endpoint": "internal://tools/query-coupon"
@@ -29,6 +398,38 @@
       "id": "tool_query_faq",
       "name": "query_faq",
       "description": "检索政策与 FAQ 知识。",
+      "enabled": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "keyword": "进场"
+      },
       "status": "已启用",
       "risk": "低",
       "endpoint": "internal://tools/query-faq"
@@ -36,7 +437,35 @@
     {
       "id": "tool_escalate",
       "name": "escalate_to_human",
-      "description": "将工单标记为待人工接管并通知值班客服。",
+      "description": "将工单标记为待人工接管。",
+      "enabled": false,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ticketId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticketId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": false
+      },
+      "sampleInput": {
+        "ticketId": "tck_10018"
+      },
       "status": "调试中",
       "risk": "高",
       "endpoint": "internal://tools/escalate"
