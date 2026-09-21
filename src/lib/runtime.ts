@@ -34,6 +34,7 @@ type PlanResult = {
   skillId: string;
   status: RunStatus;
   summary: string;
+  assignee?: string;
 };
 
 function nowIso() {
@@ -106,6 +107,7 @@ async function planAndExecute(input: {
       return {
         skillId,
         status: "已接管",
+        assignee: "待接管/现场调度",
         summary: `query_logistics 命中 ${hit?.material ?? "在途材料"}，西门限高 3.8 米，建议改东门或人工确认。工具耗时 ${Date.now() - started}ms。`,
       };
     }
@@ -201,7 +203,22 @@ async function planAndExecute(input: {
     return {
       skillId,
       status: "已接管",
+      assignee: "待接管/合规",
       summary: `risk-check 阻断危险回复：不要转账、不要提供验证码或完整证件照片，不承诺中标或兑付，通过官方合同与项目部渠道核验。${warn ? `${warn.name}状态为${warn.status}。` : ""}已转人工。`,
+    };
+  }
+
+  if (skillId === "human-handoff-decision") {
+    const role = /保证金|介绍费|转账|验证码|诈骗/.test(input.title)
+      ? "合规"
+      : /卸|物流|西门|限高/.test(input.title)
+        ? "现场调度"
+        : "值班客服";
+    return {
+      skillId,
+      status: "已接管",
+      assignee: `待接管/${role}`,
+      summary: `human-handoff-decision 判定转人工，接管岗位：${role}。自动回复已停止。`,
     };
   }
 
@@ -218,6 +235,7 @@ async function planAndExecute(input: {
     return {
       skillId,
       status: risky.length > 0 ? "已接管" : "成功",
+      assignee: risky.length > 0 ? "待接管/安全员" : undefined,
       summary:
         risky.length > 0
           ? `资质风险：${risky.map((item) => `${item.name}${item.status}`).join("、")}，不得安排进场。`
@@ -277,7 +295,32 @@ function evalPassed(summary: string, skillId: string) {
   if (skillId === "sk_catalog") {
     return summary.includes("暂停接单");
   }
+  if (skillId === "after-sales-classification") {
+    return summary.includes("质量缺陷") && summary.includes("不得推诿");
+  }
+  if (skillId === "risk-check" || skillId === "complaint-triage") {
+    return summary.includes("不要转账") && summary.includes("已转人工");
+  }
+  if (skillId === "qualification-risk-reminder") {
+    return summary.includes("不得安排进场") || summary.includes("未见缺失");
+  }
+  if (skillId === "human-handoff-decision") {
+    return summary.includes("转人工");
+  }
   return summary.length > 10;
+}
+
+function takeoverAssignee(skillId: string) {
+  if (skillId === "risk-check" || skillId === "complaint-triage") {
+    return "待接管/合规";
+  }
+  if (skillId === "qualification-risk-reminder") {
+    return "待接管/安全员";
+  }
+  if (skillId === "sk_settlement") {
+    return "待接管/成本经理";
+  }
+  return "待接管/现场调度";
 }
 
 async function appendRun(run: AgentRun) {
@@ -419,7 +462,7 @@ export async function executeRuntime(action: RuntimeAction, id: string): Promise
     status: nextStatus,
     assignee:
       plan.status === "已接管"
-        ? "待接管/现场调度"
+        ? (plan.assignee ?? takeoverAssignee(plan.skillId))
         : `Agent/${skill?.name ?? plan.skillId}`,
     summary: run.summary,
   });

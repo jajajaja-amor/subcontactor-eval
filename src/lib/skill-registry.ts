@@ -147,38 +147,45 @@ export async function saveSkillVersion(input: {
     body: nextBody,
   };
 
-  await updateJson("skill-versions.json", skillVersionsCollectionSchema, (current) => ({
-    updatedAt: nowIso(),
-    items: [
-      saved,
-      ...snapshots,
-      ...current.items.map((item) =>
-        item.skillId === skill.id && item.status === "当前"
-          ? { ...item, status: "历史" as const }
+  try {
+    await updateJson("skill-versions.json", skillVersionsCollectionSchema, (current) => ({
+      updatedAt: nowIso(),
+      items: [
+        saved,
+        ...snapshots,
+        ...current.items.map((item) =>
+          item.skillId === skill.id && item.status === "当前"
+            ? { ...item, status: "历史" as const }
+            : item,
+        ),
+      ],
+    }));
+
+    const updatedSkills = await updateJson("skills.json", skillsCollectionSchema, (current) => ({
+      updatedAt: nowIso(),
+      items: current.items.map((item) =>
+        item.id === skill.id
+          ? {
+              ...item,
+              version: nextVersion,
+              filePath: targetPath,
+              updatedAt: nowIso(),
+            }
           : item,
       ),
-    ],
-  }));
+    }));
 
-  const updatedSkills = await updateJson("skills.json", skillsCollectionSchema, (current) => ({
-    updatedAt: nowIso(),
-    items: current.items.map((item) =>
-      item.id === skill.id
-        ? {
-            ...item,
-            version: nextVersion,
-            filePath: targetPath,
-            updatedAt: nowIso(),
-          }
-        : item,
-    ),
-  }));
-
-  return {
-    skill: updatedSkills.items.find((item) => item.id === skill.id)!,
-    version: saved,
-    snapshot: snapshots[0] ?? null,
-  };
+    return {
+      skill: updatedSkills.items.find((item) => item.id === skill.id)!,
+      version: saved,
+      snapshot: snapshots[0] ?? null,
+    };
+  } catch (error) {
+    if (targetPath === skill.filePath) {
+      await writeSkillFile(skill.filePath, currentBody).catch(() => undefined);
+    }
+    throw error;
+  }
 }
 
 export async function listSkillVersionHistory(skillId: string) {
