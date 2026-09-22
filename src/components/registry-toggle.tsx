@@ -21,13 +21,10 @@ export function RegistryToggle({
   async function onClick() {
     setBusy(true);
     try {
-      const response = await fetch(`/api/${kind}`, {
-        method: "POST",
+      const response = await fetch(`/api/${kind}/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: enabled ? "disable" : "enable",
-          id,
-        }),
+        body: JSON.stringify({ enabled: !enabled }),
       });
       const payload = (await response.json()) as { ok: boolean; message?: string };
       if (!response.ok || !payload.ok) {

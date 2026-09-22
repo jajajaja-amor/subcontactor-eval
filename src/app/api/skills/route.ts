@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { listSkills } from "@/lib/ops-repo";
+import { parseEnabledParam } from "@/lib/query";
 import { UnsafeSkillPathError } from "@/lib/skill-files";
 import {
   getSkillDiff,
@@ -45,13 +46,15 @@ const bodySchema = z.discriminatedUnion("action", [
 ]);
 
 export async function GET(request: Request) {
-  const enabledOnly = new URL(request.url).searchParams.get("enabled") === "1";
-  if (enabledOnly) {
+  const enabled = parseEnabledParam(new URL(request.url));
+  if (enabled === true) {
     const skills = await listEnabledSkills();
     return NextResponse.json({ ok: true, skills });
   }
   const skills = await listSkills();
-  return NextResponse.json({ ok: true, skills: skills.items });
+  const items =
+    enabled === false ? skills.items.filter((item) => !item.enabled) : skills.items;
+  return NextResponse.json({ ok: true, skills: items });
 }
 
 export async function POST(request: Request) {

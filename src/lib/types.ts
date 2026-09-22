@@ -291,12 +291,20 @@ export type AbTest = {
   trafficPercent: number;
 };
 
+export type LlmModelOption = {
+  id: string;
+  name: string;
+  provider: LlmProviderName;
+  description: string;
+};
+
 export type LlmConfig = {
   provider: string;
   model: string;
   temperature: number;
   maxTokens: number;
   fallbackModel: string;
+  models: LlmModelOption[];
   updatedAt: string;
 };
 
@@ -305,6 +313,18 @@ export type RuntimeFallback = {
   strategy: string;
   humanTakeoverAfterFailures: number;
   message: string;
+  lastProvider?: string;
+  lastMode?: string;
+  lastSwitchedAt?: string;
+  updatedAt: string;
+};
+
+export type PlannerConfig = {
+  version: string;
+  prompt: string;
+  allowedSkillIds: string[];
+  allowedToolNames: string[];
+  extraCapabilities: MandatoryCapability[];
   updatedAt: string;
 };
 

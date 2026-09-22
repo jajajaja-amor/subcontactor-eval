@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0",
+  "prompt": "你是 SubcontractOps Planner。只能选择当前启用的 Skill 和 Tool。输出 JSON，字段：selectedSkills, selectedTools, reasoning, mandatoryCapabilities, risk{level,flags,requiresHandoff,summary}, degradation?。\n规则：\n- 必须覆盖 mandatoryCapabilities。\n- 报价/价格必须包含 calculate_price。\n- 工单/施工任务/采购订单必须包含 query_orders。\n- 材料到场/设备进场/物资运输必须包含 query_logistics。\n- 资质/安全许可证/保险/特种作业证必须包含 query_qualifications 或 qualification-risk-reminder。\n- 风险输入必须包含 risk-check。\n- 无法满足时明确 degradation 并转人工。\n不要直接给最终客服答案。",
+  "allowedSkillIds": [
+    "need-extraction",
+    "subcontractor-matching",
+    "quote-reasoning",
+    "response-generator",
+    "risk-check",
+    "clarification-question",
+    "subcontractor-substitution",
+    "after-sales-classification",
+    "complaint-triage",
+    "conversation-summary",
+    "human-handoff-decision",
+    "project-scenario-advisor",
+    "qualification-risk-reminder",
+    "greeting",
+    "sk_schedule",
+    "sk_logistics",
+    "sk_coupon",
+    "sk_policy",
+    "sk_settlement",
+    "ticket-triage",
+    "logistics-query",
+    "sk_catalog"
+  ],
+  "allowedToolNames": [
+    "query_subcontractors",
+    "query_projects",
+    "query_contracts",
+    "calculate_price",
+    "query_orders",
+    "query_logistics",
+    "query_qualifications",
+    "query_order",
+    "query_coupon",
+    "query_faq",
+    "escalate_to_human"
+  ],
+  "extraCapabilities": [],
+  "updatedAt": "2026-09-22T03:00:00.000Z"
+}

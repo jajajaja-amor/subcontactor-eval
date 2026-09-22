@@ -339,12 +339,20 @@ export const abTestSchema = z.object({
   trafficPercent: z.number(),
 });
 
+export const llmModelOptionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  provider: z.enum(["coze", "openai-compatible", "classroom-fixture"]),
+  description: z.string(),
+});
+
 export const llmConfigSchema = z.object({
   provider: z.string(),
   model: z.string(),
   temperature: z.number(),
   maxTokens: z.number().int(),
   fallbackModel: z.string(),
+  models: z.array(llmModelOptionSchema).default([]),
   updatedAt: z.string(),
 });
 
@@ -353,6 +361,30 @@ export const runtimeFallbackSchema = z.object({
   strategy: z.string(),
   humanTakeoverAfterFailures: z.number().int(),
   message: z.string(),
+  lastProvider: z.string().optional(),
+  lastMode: z.string().optional(),
+  lastSwitchedAt: z.string().optional(),
+  updatedAt: z.string(),
+});
+
+export const plannerConfigSchema = z.object({
+  version: z.string(),
+  prompt: z.string(),
+  allowedSkillIds: z.array(z.string()),
+  allowedToolNames: z.array(z.string()),
+  extraCapabilities: z.array(
+    z.enum([
+      "subcontractor-matching",
+      "matching-reason",
+      "quote-reasoning",
+      "price-calculation",
+      "order-query",
+      "logistics-query",
+      "qualification-check",
+      "risk-check",
+      "human-handoff",
+    ]),
+  ),
   updatedAt: z.string(),
 });
 

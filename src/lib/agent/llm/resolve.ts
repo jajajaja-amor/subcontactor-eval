@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getLlmConfig } from "@/lib/ops-repo";
+import { getLlmConfig, getRuntimeFallback } from "@/lib/ops-repo";
 import type { LlmProviderName } from "@/lib/types";
 
 import { DEMO_SWITCH_HINT, LlmProviderError } from "@/lib/agent/llm/types";
@@ -39,10 +39,11 @@ function missingConfig(provider: string, missing: string[]) {
 }
 
 export async function resolveLlmProvider(): Promise<ResolvedLlmProvider> {
-  const config = await getLlmConfig();
+  const [config, fallback] = await Promise.all([getLlmConfig(), getRuntimeFallback()]);
+  const fromRuntime = normalizeProvider(fallback.lastProvider ?? "");
   const fromEnv = normalizeProvider(process.env.LLM_PROVIDER ?? "");
   const fromFile = normalizeProvider(config.provider);
-  const name = fromEnv ?? fromFile;
+  const name = fromRuntime ?? fromEnv ?? fromFile;
 
   if (!name) {
     throw missingConfig(config.provider || "未设置", [

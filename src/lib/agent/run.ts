@@ -9,6 +9,11 @@ import { completeLlm, LlmProviderError, resolveLlmProvider } from "@/lib/agent/l
 import { createPlan } from "@/lib/agent/planner";
 import { saveRunRecord } from "@/lib/agent/run-records";
 import { validatePlan } from "@/lib/agent/validator";
+import {
+  filterPlannerCatalog,
+  getPlannerConfig,
+  mergeCapabilities,
+} from "@/lib/planner-config";
 import { getEnabledCapabilities } from "@/lib/skill-registry";
 import type {
   AgentStep,
@@ -63,8 +68,19 @@ export async function runAgent(input: RunAgentInput): Promise<RunRecord> {
     base.provider = resolved.name;
     base.model = resolved.model;
 
-    const { skills, tools } = await getEnabledCapabilities();
-    const mandatoryCapabilities = deriveMandatoryCapabilities(input.question);
+    const [enabled, plannerConfig] = await Promise.all([
+      getEnabledCapabilities(),
+      getPlannerConfig(),
+    ]);
+    const { skills, tools } = filterPlannerCatalog(
+      plannerConfig,
+      enabled.skills,
+      enabled.tools,
+    );
+    const mandatoryCapabilities = mergeCapabilities(
+      deriveMandatoryCapabilities(input.question),
+      plannerConfig.extraCapabilities,
+    );
 
     const planStarted = Date.now();
     const plan = await createPlan({
