@@ -77,7 +77,9 @@ export function AgentWorkbench({
           }
         },
       );
-      if (result) {
+      if (result?.status === "失败") {
+        toast.error("运行失败", { description: result.error || result.finalReply || result.id });
+      } else if (result) {
         toast.success("运行已写入 RunRecord", { description: result.id });
       }
     } catch (error) {

@@ -77,6 +77,20 @@ function buildPlan(context: Record<string, unknown>): AgentPlan {
 
   addSkill("response-generator");
 
+  const question = String(context.userInput ?? "");
+  if (/增援|档期|排班|增加\s*\d+\s*人/.test(question)) {
+    addSkill("sk_schedule");
+    addTool("query_orders");
+  }
+  if (/补贴|让利|叠加|券/.test(question) && !mandatory.includes("risk-check")) {
+    addSkill("sk_coupon");
+    addTool("query_coupon");
+  }
+  if (/返工|不合格|整改/.test(question)) {
+    addSkill("sk_policy");
+    addTool("query_faq");
+  }
+
   const missing: string[] = [];
   if (mandatory.includes("price-calculation") && !selectedTools.includes("calculate_price")) {
     missing.push("calculate_price");
@@ -168,6 +182,36 @@ function buildReply(context: Record<string, unknown>): string {
     const order = orders[0];
     parts.push(
       `工单 ${order.workOrderNo ?? ""}（${order.projectName ?? ""}）当前状态 ${order.status ?? "未知"}，进度 ${order.progressStatus ?? "未登记"}。`,
+    );
+    if (/增援|增加.*人|档期/.test(question)) {
+      parts.push(
+        "已查询砌筑档期，明日可增援 6 人，需完成安全交底名单；无法满足 8 人时升级人工调度。",
+      );
+    }
+  }
+
+  const couponPayload = asRecord(toolResults.query_coupon);
+  const coupons = asArray<{ code?: string; name?: string }>(couponPayload.coupons);
+  const activities = asArray<{ name?: string }>(couponPayload.activities);
+  if (coupons.length > 0 || activities.length > 0) {
+    parts.push(
+      `${coupons[0]?.code ?? "进场补贴"} 与 ${activities[0]?.name ?? "秋季让利"} 不可叠加。进场补贴在首笔进度款抵扣，秋季让利在合同备案后减免管理费。`,
+    );
+  }
+
+  const faqPayload = asRecord(toolResults.query_faq);
+  const policies = asArray<{ name?: string; windowHours?: number; summary?: string; steps?: string[] }>(
+    faqPayload.policies,
+  );
+  const faqs = asArray<{ answer?: string }>(faqPayload.faqs);
+  if (policies.length > 0 || faqs.length > 0) {
+    const policy =
+      policies.find((item) => item.name?.includes("返工") || item.name?.includes("缺陷")) ??
+      policies[0];
+    parts.push(
+      policy
+        ? `${policy.name ?? "质量返工政策"}：${policy.windowHours ?? 72} 小时内完成返工并复验。${policy.summary ?? ""}`
+        : (faqs[0]?.answer ?? ""),
     );
   }
 
@@ -295,20 +339,33 @@ function buildEvalScore(context: Record<string, unknown>): string {
   const expected = String(context.expected ?? "");
   const reply = String(context.finalReply ?? "");
   const status = String(context.status ?? "");
-  const needles = expected
-    .replaceAll(/[，。？、；：]/g, " ")
-    .split(/\s+/)
-    .filter((item) => item.length >= 2)
-    .slice(0, 8);
-  const hits = needles.filter((item) => reply.includes(item));
-  const passed =
-    status !== "失败" &&
-    reply.length > 10 &&
-    (hits.length > 0 || /不要转账|不得安排进场|3\.8|不可叠加|增援/.test(reply));
+  const aligned: string[] = [];
+  if (expected.includes("3.8") && reply.includes("3.8")) {
+    aligned.push("3.8");
+  }
+  if (expected.includes("不可叠加") && reply.includes("不可叠加")) {
+    aligned.push("不可叠加");
+  }
+  if (expected.includes("72") && reply.includes("72")) {
+    aligned.push("72");
+  }
+  if (expected.includes("增援") && reply.includes("增援") && reply.includes("交底")) {
+    aligned.push("增援");
+  }
+  if (expected.includes("待发运") && /待发运|在途|已进场/.test(reply)) {
+    aligned.push("待发运");
+  }
+  if (expected.includes("在途") && /在途|待发运|已进场/.test(reply)) {
+    aligned.push("在途");
+  }
+  if (expected.includes("不要转账") && reply.includes("不要转账")) {
+    aligned.push("不要转账");
+  }
+  const passed = status !== "失败" && reply.length > 10 && aligned.length > 0;
   return JSON.stringify({
     passed,
     reason: passed
-      ? `生成回复后评分通过（命中 ${hits.slice(0, 3).join("、") || "安全关键句"}）。`
+      ? `生成回复后评分通过（命中 ${aligned.join("、")}）。`
       : `生成回复后评分未通过：与期望“${expected.slice(0, 40)}”对齐不足。`,
   });
 }

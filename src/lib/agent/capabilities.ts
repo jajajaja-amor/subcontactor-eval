@@ -69,10 +69,14 @@ export function deriveMandatoryCapabilities(input: string): MandatoryCapability[
     selected.add("quote-reasoning");
     selected.add("price-calculation");
   }
-  if (/工单|施工任务|采购订单|WO-|任务进度/.test(text)) {
+  if (/工单|施工任务|采购订单|WO-|任务进度|增援|档期|排班|增加\s*\d+\s*人/.test(text)) {
     selected.add("order-query");
   }
-  if (/材料到场|设备进场|物资运输|物流|在途|卸货|发运|进场车/.test(text)) {
+  if (
+    /材料到场|设备进场|物资运输|物流|在途|卸货|发运|进场车|钢筋车|到哪了|车辆位置/.test(
+      text,
+    )
+  ) {
     selected.add("logistics-query");
   }
   if (/资质|安全许可证|安全生产许可证|保险|特种作业证|是否过期|是否有效/.test(text)) {

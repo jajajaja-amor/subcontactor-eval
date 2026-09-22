@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { extractJsonObject } from "@/lib/agent/extract-json";
 import { deriveMandatoryCapabilities } from "@/lib/agent/capabilities";
 import { executePlan } from "@/lib/agent/executor";
-import { completeLlm, resolveLlmProvider } from "@/lib/agent/llm";
+import { completeLlm, LlmProviderError, resolveLlmProvider } from "@/lib/agent/llm";
 import { createPlan } from "@/lib/agent/planner";
 import { saveRunRecord } from "@/lib/agent/run-records";
 import { validatePlan } from "@/lib/agent/validator";
@@ -166,13 +166,11 @@ export async function runAgent(input: RunAgentInput): Promise<RunRecord> {
     return base;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Agent 运行失败";
-    const hint =
-      error && typeof error === "object" && "hint" in error
-        ? String((error as { hint?: string }).hint ?? "")
-        : undefined;
+    const hint = error instanceof LlmProviderError ? error.hint : undefined;
+    const combined = hint ? `${message} ${hint}` : message;
     base.status = "失败";
-    base.error = message;
-    base.finalReply = message;
+    base.error = combined;
+    base.finalReply = combined;
     base.durationMs = Date.now() - started;
     await saveRunRecord(base).catch(() => undefined);
     emit({ type: "error", message, hint });

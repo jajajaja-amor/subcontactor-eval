@@ -9,11 +9,35 @@ export function extractTrade(text: string): string {
 }
 
 export function extractQuantity(text: string): number | undefined {
-  const match = text.match(/(\d+(?:\.\d+)?)\s*(立方米|吨|平方|平米|台|人|车)?/);
+  const withUnit = text.match(/(\d+(?:\.\d+)?)\s*(立方米|吨|平方米|平方|平米|台|人|车)/);
+  if (withUnit) {
+    return Number(withUnit[1]);
+  }
+  const cleaned = text.replace(/\d+\s*#/g, " ");
+  const match = cleaned.match(/(\d+(?:\.\d+)?)/);
   if (!match) {
     return undefined;
   }
   return Number(match[1]);
+}
+
+export function inferSubcontractorId(text: string): string {
+  if (/新进|这家/.test(text)) {
+    return "sub_xinjin";
+  }
+  if (/沪东/.test(text)) {
+    return "sub_hudong";
+  }
+  if (/浦江/.test(text)) {
+    return "sub_pujiang";
+  }
+  if (/江南/.test(text)) {
+    return "sub_jiangnan";
+  }
+  if (/临港模板|临港模/.test(text)) {
+    return "sub_lingang";
+  }
+  return "";
 }
 
 export function extractRegion(text: string): string {
@@ -61,15 +85,17 @@ export function buildToolArgs(name: string, question: string): ParsedToolArgs {
       };
     case "query_qualifications":
       return {
-        keyword: /缺失|过期|预警/.test(question) ? "缺失" : "",
-        subcontractorId: /新进|这家/.test(question) ? "sub_xinjin" : "",
+        keyword: /缺失/.test(question) && !/是否过期|是否有效/.test(question) ? "缺失" : "",
+        subcontractorId: inferSubcontractorId(question),
       };
     case "query_order":
       return { keyword: trade || region || "临港" };
     case "query_faq":
-      return { keyword: trade || "进场" };
+      return {
+        keyword: /返工|不合格|整改/.test(question) ? "返工" : trade || "进场",
+      };
     case "query_coupon":
-      return { keyword: "进场" };
+      return { keyword: /让利|补贴|叠加|券/.test(question) ? "进场" : "进场" };
     default:
       return { keyword: question.slice(0, 20) };
   }
