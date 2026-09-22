@@ -14,6 +14,7 @@ import {
   getPlannerConfig,
   mergeCapabilities,
 } from "@/lib/planner-config";
+import { getRuntimeFallback } from "@/lib/ops-repo";
 import { getEnabledCapabilities } from "@/lib/skill-registry";
 import type {
   AgentStep,
@@ -64,6 +65,11 @@ export async function runAgent(input: RunAgentInput): Promise<RunRecord> {
   };
 
   try {
+    const fallback = await getRuntimeFallback();
+    if (fallback.lastProvider) {
+      base.provider = fallback.lastProvider;
+      base.model = fallback.lastProvider;
+    }
     const resolved = await resolveLlmProvider();
     base.provider = resolved.name;
     base.model = resolved.model;
