@@ -69,7 +69,10 @@ export function deriveMandatoryCapabilities(input: string): MandatoryCapability[
     selected.add("subcontractor-matching");
     selected.add("matching-reason");
   }
-  if (/报价|单价|合价|计价|多少钱|价格/.test(text) && !selected.has("risk-check")) {
+  if (
+    /报价|单价|合价|计价|多少钱|价格|什么价|啥价|询价|估价/.test(text) &&
+    !selected.has("risk-check")
+  ) {
     selected.add("quote-reasoning");
     selected.add("price-calculation");
   }
