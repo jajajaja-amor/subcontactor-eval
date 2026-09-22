@@ -15,6 +15,7 @@ import {
   runsCollectionSchema,
   ticketsCollectionSchema,
 } from "@/lib/schemas";
+import { runAgent, scoreGeneratedReply } from "@/lib/agent/run";
 import { getEnabledCapabilities } from "@/lib/skill-registry";
 import { updateJson } from "@/lib/store";
 import { runRegisteredTool } from "@/lib/tool-runner";
@@ -279,37 +280,6 @@ async function planAndExecute(input: {
   };
 }
 
-function evalPassed(summary: string, skillId: string) {
-  if (skillId === "sk_logistics") {
-    return summary.includes("3.8") || /在途|待发运|已进场/.test(summary);
-  }
-  if (skillId === "sk_coupon") {
-    return summary.includes("不可叠加");
-  }
-  if (skillId === "sk_policy") {
-    return summary.includes("72");
-  }
-  if (skillId === "sk_schedule") {
-    return summary.includes("增援") && summary.includes("交底");
-  }
-  if (skillId === "sk_catalog") {
-    return summary.includes("暂停接单");
-  }
-  if (skillId === "after-sales-classification") {
-    return summary.includes("质量缺陷") && summary.includes("不得推诿");
-  }
-  if (skillId === "risk-check" || skillId === "complaint-triage") {
-    return summary.includes("不要转账") && summary.includes("已转人工");
-  }
-  if (skillId === "qualification-risk-reminder") {
-    return summary.includes("不得安排进场") || summary.includes("未见缺失");
-  }
-  if (skillId === "human-handoff-decision") {
-    return summary.includes("转人工");
-  }
-  return summary.length > 10;
-}
-
 function takeoverAssignee(skillId: string) {
   if (skillId === "risk-check" || skillId === "complaint-triage") {
     return "待接管/合规";
@@ -359,12 +329,19 @@ export async function executeRuntime(action: RuntimeAction, id: string): Promise
     }
 
     let passed = 0;
+    const reports: string[] = [];
     for (const evalCase of selected) {
-      const plan = await planAndExecute({
-        title: evalCase.input,
-        skillId: evalCase.skillId,
+      const generated = await runAgent({
+        question: evalCase.input,
+        source: "api",
       });
-      if (evalPassed(plan.summary, evalCase.skillId)) {
+      const score = await scoreGeneratedReply({
+        expected: evalCase.expected,
+        finalReply: generated.finalReply,
+        status: generated.status,
+      });
+      reports.push(`${evalCase.name}：${score.passed ? "通过" : "未通过"}（${score.reason}）`);
+      if (score.passed) {
         passed += 1;
       }
     }
@@ -385,7 +362,7 @@ export async function executeRuntime(action: RuntimeAction, id: string): Promise
 
     return {
       ok: true,
-      message: `评测完成：${passed}/${selected.length} 通过，通过率 ${Math.round(passRate * 100)}%。主模型 ${llm.model}`,
+      message: `评测完成：${passed}/${selected.length} 通过，通过率 ${Math.round(passRate * 100)}%。主模型 ${llm.model}。报告：${reports.join("；")}`,
       batch: nextBatch,
     };
   }

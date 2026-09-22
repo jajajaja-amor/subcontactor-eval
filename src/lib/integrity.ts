@@ -23,6 +23,7 @@ import {
   listTickets,
   listTools,
 } from "@/lib/ops-repo";
+import { listRunRecords } from "@/lib/agent/run-records";
 import { readSkillFile } from "@/lib/skill-files";
 import { inspectDataFile } from "@/lib/store";
 
@@ -73,6 +74,7 @@ export async function checkDataIntegrity(): Promise<{
     qualifications,
     logistics,
     tools,
+    runRecords,
   ] = await Promise.all([
     listUsers(),
     listProducts(),
@@ -92,6 +94,7 @@ export async function checkDataIntegrity(): Promise<{
     listQualifications(),
     listLogistics(),
     listTools(),
+    listRunRecords(),
   ]);
 
   const userIds = new Set(users.items.map((item) => item.id));
@@ -99,7 +102,10 @@ export async function checkDataIntegrity(): Promise<{
   const orderIds = new Set(orders.items.map((item) => item.id));
   const ticketIds = new Set(tickets.items.map((item) => item.id));
   const skillIds = new Set(skills.items.map((item) => item.id));
-  const runIds = new Set(runs.items.map((item) => item.id));
+  const runIds = new Set([
+    ...runs.items.map((item) => item.id),
+    ...runRecords.items.map((item) => item.id),
+  ]);
   const caseIds = new Set(cases.items.map((item) => item.id));
   const subcontractorIds = new Set(subcontractors.items.map((item) => item.id));
   const projectIds = new Set(projects.items.map((item) => item.id));

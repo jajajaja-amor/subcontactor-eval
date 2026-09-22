@@ -34,12 +34,14 @@ export async function calculatePrice(input: {
   const product = products.items.find(
     (item) => item.name.includes(trade) || item.category.includes(trade),
   );
+  const region = input.region?.trim() ?? "";
+  const regionNeedle = region === "临港" || region === "浦东" ? "上海" : region;
   const vendor = input.subcontractorId
     ? subcontractors.items.find((item) => item.id === input.subcontractorId)
     : subcontractors.items.find(
         (item) =>
           item.trades.some((value) => value.includes(trade)) &&
-          (!input.region || item.region.includes(input.region)),
+          (!regionNeedle || item.region.includes(regionNeedle) || item.region.includes(region)),
       );
 
   const unitPrice = vendor
@@ -52,11 +54,13 @@ export async function calculatePrice(input: {
     quoteMin != null && quoteMax != null
       ? unitPrice >= quoteMin && unitPrice <= quoteMax
       : false;
+  const quantityUnit =
+    product?.unit || (vendor?.quoteUnit ? vendor.quoteUnit.replace(/^元\//, "") : "") || "项";
 
   return {
     trade,
     quantity,
-    unit: vendor?.quoteUnit ?? product?.unit ?? "项",
+    unit: quantityUnit,
     unitPrice,
     amount,
     quoteMin,

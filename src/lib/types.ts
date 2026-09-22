@@ -21,6 +21,22 @@ export type ToolStatus = "已启用" | "已停用" | "调试中";
 export type RiskLevel = "低" | "中" | "高";
 export type SkillVersionStatus = "当前" | "历史" | "回滚候选";
 export type RunStatus = "成功" | "失败" | "进行中" | "已接管";
+export type RunRecordSource = "web" | "demo" | "api" | "retry" | "handoff";
+export type RunStepType = "planner" | "validator" | "skill" | "tool" | "risk-check" | "reply";
+export type RunStepStatus = "成功" | "失败" | "进行中" | "跳过";
+export type MandatoryCapability =
+  | "subcontractor-matching"
+  | "matching-reason"
+  | "quote-reasoning"
+  | "price-calculation"
+  | "order-query"
+  | "logistics-query"
+  | "qualification-check"
+  | "risk-check"
+  | "human-handoff";
+export type LlmProviderName = "coze" | "openai-compatible" | "classroom-fixture";
+export type PlanRiskLevel = "低" | "中" | "高";
+export type ValidationSeverity = "info" | "red" | "block";
 export type RatingLabel = "满意" | "一般" | "不满意";
 export type ImprovementStatus = "待评估" | "进行中" | "已上线" | "已拒绝";
 export type EvalBatchStatus = "待运行" | "运行中" | "已完成" | "失败";
@@ -367,4 +383,79 @@ export type HandoffRule = {
   trigger: string;
   action: string;
   enabled: boolean;
+};
+
+export type ConversationMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+export type PlanRisk = {
+  level: PlanRiskLevel;
+  flags: string[];
+  requiresHandoff: boolean;
+  summary: string;
+};
+
+export type PlanDegradation = {
+  needed: boolean;
+  reason: string;
+  handoff: boolean;
+};
+
+export type ValidationIssue = {
+  code: string;
+  message: string;
+  severity: ValidationSeverity;
+  capability?: MandatoryCapability;
+};
+
+export type AgentPlan = {
+  selectedSkills: string[];
+  selectedTools: string[];
+  reasoning: string;
+  mandatoryCapabilities: MandatoryCapability[];
+  risk: PlanRisk;
+  degradation?: PlanDegradation;
+  parseFallback?: boolean;
+  validationIssues?: ValidationIssue[];
+};
+
+export type AgentStep = {
+  stepId: string;
+  type: RunStepType;
+  name: string;
+  input: unknown;
+  output: unknown;
+  durationMs: number;
+  status: RunStepStatus;
+  error?: string;
+};
+
+export type RiskResult = {
+  blocked: boolean;
+  requiresHandoff: boolean;
+  level: PlanRiskLevel;
+  reasons: string[];
+  rewrittenReply?: string;
+  passed: boolean;
+};
+
+export type RunRecord = {
+  id: string;
+  question: string;
+  source: RunRecordSource;
+  conversationId: string;
+  createdAt: string;
+  status: RunStatus;
+  finalReply: string;
+  plan: AgentPlan | null;
+  steps: AgentStep[];
+  riskResult: RiskResult | null;
+  durationMs: number;
+  error?: string;
+  provider: LlmProviderName;
+  model: string;
+  skillVersions: Record<string, string>;
+  toolVersions: Record<string, string>;
 };

@@ -9,11 +9,20 @@ import {
 } from "@/components/ui/card";
 import { getLlmConfig, getRuntimeFallback } from "@/lib/ops-repo";
 import { getStoreDataDir } from "@/lib/store";
+import { resolveLlmProvider } from "@/lib/agent/llm";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
   const [llm, fallback] = await Promise.all([getLlmConfig(), getRuntimeFallback()]);
+  let providerLabel = llm.provider;
+  let providerHint = "";
+  try {
+    const resolved = await resolveLlmProvider();
+    providerLabel = `${resolved.name} / ${resolved.model}`;
+  } catch (error) {
+    providerHint = error instanceof Error ? error.message : "Provider 配置不完整";
+  }
 
   return (
     <div className="space-y-5">
@@ -27,11 +36,17 @@ export default async function SettingsPage() {
           <CardDescription>主模型失败时切换 fallbackModel。</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-2 text-sm sm:grid-cols-2">
-          <p>提供方：{llm.provider}</p>
+          <p>配置文件提供方：{llm.provider}</p>
+          <p>解析后：{providerLabel}</p>
           <p>主模型：{llm.model}</p>
           <p>温度：{llm.temperature}</p>
           <p>最大 Token：{llm.maxTokens}</p>
           <p>降级模型：{llm.fallbackModel}</p>
+          <p className="sm:col-span-2 text-muted-foreground">
+            环境变量 LLM_PROVIDER 优先于配置文件。可选 coze、openai-compatible、classroom-fixture。
+            openai-compatible 需要 OPENAI_API_KEY、OPENAI_BASE_URL、LLM_MODEL。缺少配置不会静默降级。
+            {providerHint ? ` ${providerHint}` : ""}
+          </p>
         </CardContent>
       </Card>
       <Card>
