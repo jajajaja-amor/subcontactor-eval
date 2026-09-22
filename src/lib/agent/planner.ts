@@ -3,6 +3,7 @@ import "server-only";
 import { extractJsonObject } from "@/lib/agent/extract-json";
 import { describeAvailable } from "@/lib/agent/capabilities";
 import { completeLlm } from "@/lib/agent/llm";
+import { DEFAULT_PLANNER_PROMPT, getPlannerConfig } from "@/lib/planner-config";
 import { agentPlanSchema } from "@/lib/schemas";
 import type {
   AgentPlan,
@@ -18,6 +19,7 @@ export type PlannerInput = {
   availableSkills: Skill[];
   availableTools: Tool[];
   mandatoryCapabilities: MandatoryCapability[];
+  systemPrompt?: string;
 };
 
 function fallbackPlan(input: PlannerInput, reason: string): AgentPlan {
@@ -45,6 +47,7 @@ function fallbackPlan(input: PlannerInput, reason: string): AgentPlan {
 
 export async function createPlan(input: PlannerInput): Promise<AgentPlan> {
   const catalog = describeAvailable(input.availableSkills, input.availableTools);
+  const storedPrompt = input.systemPrompt ?? (await getPlannerConfig().catch(() => null))?.prompt;
   const result = await completeLlm({
     purpose: "plan",
     json: true,
@@ -58,16 +61,7 @@ export async function createPlan(input: PlannerInput): Promise<AgentPlan> {
     messages: [
       {
         role: "system",
-        content: `你是 SubcontractOps Planner。只能选择当前启用的 Skill 和 Tool。输出 JSON，字段：selectedSkills, selectedTools, reasoning, mandatoryCapabilities, risk{level,flags,requiresHandoff,summary}, degradation?。
-规则：
-- 必须覆盖 mandatoryCapabilities。
-- 报价/价格必须包含 calculate_price。
-- 工单/施工任务/采购订单必须包含 query_orders。
-- 材料到场/设备进场/物资运输必须包含 query_logistics。
-- 资质/安全许可证/保险/特种作业证必须包含 query_qualifications 或 qualification-risk-reminder。
-- 风险输入必须包含 risk-check。
-- 无法满足时明确 degradation 并转人工。
-不要直接给最终客服答案。`,
+        content: storedPrompt || DEFAULT_PLANNER_PROMPT,
       },
       {
         role: "user",

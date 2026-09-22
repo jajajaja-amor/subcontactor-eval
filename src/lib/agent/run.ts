@@ -6,9 +6,16 @@ import { extractJsonObject } from "@/lib/agent/extract-json";
 import { deriveMandatoryCapabilities } from "@/lib/agent/capabilities";
 import { executePlan } from "@/lib/agent/executor";
 import { completeLlm, LlmProviderError, resolveLlmProvider } from "@/lib/agent/llm";
+import type { LlmProviderName } from "@/lib/types";
 import { createPlan } from "@/lib/agent/planner";
 import { saveRunRecord } from "@/lib/agent/run-records";
 import { validatePlan } from "@/lib/agent/validator";
+import {
+  filterPlannerCatalog,
+  getPlannerConfig,
+  mergeCapabilities,
+} from "@/lib/planner-config";
+import { getRuntimeFallback } from "@/lib/ops-repo";
 import { getEnabledCapabilities } from "@/lib/skill-registry";
 import type {
   AgentStep,
@@ -59,12 +66,30 @@ export async function runAgent(input: RunAgentInput): Promise<RunRecord> {
   };
 
   try {
+    const fallback = await getRuntimeFallback();
+    const last = fallback.lastProvider;
+    if (last === "coze" || last === "openai-compatible" || last === "classroom-fixture") {
+      const name: LlmProviderName = last;
+      base.provider = name;
+      base.model = last;
+    }
     const resolved = await resolveLlmProvider();
     base.provider = resolved.name;
     base.model = resolved.model;
 
-    const { skills, tools } = await getEnabledCapabilities();
-    const mandatoryCapabilities = deriveMandatoryCapabilities(input.question);
+    const [enabled, plannerConfig] = await Promise.all([
+      getEnabledCapabilities(),
+      getPlannerConfig(),
+    ]);
+    const { skills, tools } = filterPlannerCatalog(
+      plannerConfig,
+      enabled.skills,
+      enabled.tools,
+    );
+    const mandatoryCapabilities = mergeCapabilities(
+      deriveMandatoryCapabilities(input.question),
+      plannerConfig.extraCapabilities,
+    );
 
     const planStarted = Date.now();
     const plan = await createPlan({

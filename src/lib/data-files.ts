@@ -27,4 +27,5 @@ export const REQUIRED_DATA_FILES = [
   "qualifications.json",
   "handoff-rules.json",
   "run-records.json",
+  "planner-config.json",
 ] as const;

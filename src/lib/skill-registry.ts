@@ -62,10 +62,78 @@ export async function getSkillWithPrompt(id: string) {
   if (!skill) {
     return null;
   }
-  return {
-    ...skill,
-    systemPrompt: await readSkillFile(skill.filePath),
-  };
+  try {
+    return {
+      ...skill,
+      systemPrompt: await readSkillFile(skill.filePath),
+    };
+  } catch {
+    return {
+      ...skill,
+      systemPrompt: "",
+    };
+  }
+}
+
+export async function getSkillVersion(skillId: string, versionId: string) {
+  const versions = await listSkillVersionHistory(skillId);
+  return versions.find((item) => item.id === versionId) ?? null;
+}
+
+export async function updateSkill(input: {
+  id: string;
+  systemPrompt?: string;
+  changeNote?: string;
+  filePath?: string;
+  description?: string;
+  model?: string;
+  temperature?: number;
+  maxTokens?: number;
+  requiredTools?: string[];
+  enabled?: boolean;
+}) {
+  const current = await getSkillWithPrompt(input.id);
+  if (!current) {
+    throw new Error(`没有找到 Skill ${input.id}`);
+  }
+  if (input.filePath) {
+    assertSafeSkillFilePath(input.filePath);
+  }
+
+  if (input.systemPrompt != null || input.filePath) {
+    await saveSkillVersion({
+      id: input.id,
+      systemPrompt: input.systemPrompt ?? current.systemPrompt ?? "",
+      changeNote: input.changeNote ?? "",
+      filePath: input.filePath,
+    });
+  }
+
+  if (input.enabled != null && input.enabled !== current.enabled) {
+    await setSkillEnabled(input.id, input.enabled);
+  }
+
+  const updated = await updateJson("skills.json", skillsCollectionSchema, (collection) => ({
+    updatedAt: nowIso(),
+    items: collection.items.map((item) =>
+      item.id === input.id
+        ? {
+            ...item,
+            description: input.description ?? item.description,
+            model: input.model ?? item.model,
+            temperature: input.temperature ?? item.temperature,
+            maxTokens: input.maxTokens ?? item.maxTokens,
+            requiredTools: input.requiredTools ?? item.requiredTools,
+            updatedAt: nowIso(),
+          }
+        : item,
+    ),
+  }));
+  const skill = updated.items.find((item) => item.id === input.id);
+  if (!skill) {
+    throw new Error(`没有找到 Skill ${input.id}`);
+  }
+  return getSkillWithPrompt(input.id);
 }
 
 export async function setSkillEnabled(id: string, enabled: boolean) {

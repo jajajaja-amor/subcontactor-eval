@@ -4,5 +4,31 @@
   "temperature": 0.2,
   "maxTokens": 1200,
   "fallbackModel": "classroom-fixture",
-  "updatedAt": "2026-09-21T08:00:00.000Z"
+  "models": [
+    {
+      "id": "classroom-fixture",
+      "name": "课堂演示",
+      "provider": "classroom-fixture",
+      "description": "确定性演示稳定模式，输出带【课堂演示】标识。"
+    },
+    {
+      "id": "gpt-4o-mini",
+      "name": "GPT-4o mini",
+      "provider": "openai-compatible",
+      "description": "OpenAI 兼容接口，需要 OPENAI_API_KEY 与 OPENAI_BASE_URL。"
+    },
+    {
+      "id": "qwen-plus",
+      "name": "Qwen Plus",
+      "provider": "openai-compatible",
+      "description": "DashScope / 兼容 OpenAI 的通义模型。"
+    },
+    {
+      "id": "coze-default",
+      "name": "Coze 默认",
+      "provider": "coze",
+      "description": "通过 coze-coding-dev-sdk 调用，需要 Coze API Token。"
+    }
+  ],
+  "updatedAt": "2026-09-22T03:00:00.000Z"
 }

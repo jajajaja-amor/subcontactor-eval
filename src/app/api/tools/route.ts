@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { listTools } from "@/lib/ops-repo";
+import { parseEnabledParam } from "@/lib/query";
 import { listEnabledTools, runRegisteredTool, setToolEnabled } from "@/lib/tool-runner";
 
 export const runtime = "nodejs";
@@ -21,13 +22,14 @@ const bodySchema = z.discriminatedUnion("action", [
 ]);
 
 export async function GET(request: Request) {
-  const enabledOnly = new URL(request.url).searchParams.get("enabled") === "1";
-  if (enabledOnly) {
+  const enabled = parseEnabledParam(new URL(request.url));
+  if (enabled === true) {
     const tools = await listEnabledTools();
     return NextResponse.json({ ok: true, tools });
   }
   const tools = await listTools();
-  return NextResponse.json({ ok: true, tools: tools.items });
+  const items = enabled === false ? tools.items.filter((item) => !item.enabled) : tools.items;
+  return NextResponse.json({ ok: true, tools: items });
 }
 
 export async function POST(request: Request) {
