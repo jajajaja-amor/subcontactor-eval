@@ -40,7 +40,11 @@ export function RunDetailActions({ runId }: { runId: string }) {
           ),
         );
       }
-      toast.success("已保存");
+      toast.success(payload.run?.status === "已接管" ? "已转人工" : "已保存");
+      if (payload.run?.id && payload.run.id !== runId) {
+        router.push(`/runs/${payload.run.id}`);
+        return;
+      }
       router.refresh();
     } catch (error) {
       toast.error("操作失败", {

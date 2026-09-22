@@ -28,7 +28,7 @@ export async function streamAgentRun(
     body: JSON.stringify({ ...body, stream: true }),
   });
 
-  if (!response.ok && !response.body) {
+  if (!response.ok) {
     const payload = (await response.json().catch(() => null)) as {
       message?: string;
       hint?: string;

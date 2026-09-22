@@ -61,7 +61,11 @@ export function deriveMandatoryCapabilities(input: string): MandatoryCapability[
     selected.add("risk-check");
     selected.add("human-handoff");
   }
-  if (/分包商|班组|推荐|匹配|哪家能做|谁能做|找.*队/.test(text)) {
+  if (
+    /推荐|匹配|哪家能做|谁能做|找.*队|有哪些.*分包|可合作.*分包|分包商.*有哪些|班组.*(?:推荐|匹配|有哪些)/.test(
+      text,
+    )
+  ) {
     selected.add("subcontractor-matching");
     selected.add("matching-reason");
   }

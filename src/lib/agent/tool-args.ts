@@ -53,6 +53,33 @@ export function extractRegion(text: string): string {
   return "";
 }
 
+export function normalizeVendorRegion(region: string): string {
+  if (region === "临港" || region === "浦东") {
+    return "上海";
+  }
+  return region;
+}
+
+export function logisticsKeyword(text: string): string {
+  if (/玻璃|隐框|幕墙|城投|金融中心/.test(text)) {
+    return "玻璃";
+  }
+  if (/砌块/.test(text)) {
+    return "砌块";
+  }
+  const trade = extractTrade(text);
+  if (trade === "砌筑") {
+    return "砌块";
+  }
+  if (trade) {
+    return trade;
+  }
+  if (/模板|铝模/.test(text)) {
+    return "模板";
+  }
+  return "钢筋";
+}
+
 export function buildToolArgs(name: string, question: string): ParsedToolArgs {
   const trade = extractTrade(question);
   const region = extractRegion(question);
@@ -61,8 +88,8 @@ export function buildToolArgs(name: string, question: string): ParsedToolArgs {
   switch (name) {
     case "query_subcontractors":
       return {
-        keyword: trade || "砌筑",
-        region: region === "临港" || region === "浦东" ? "上海" : region,
+        keyword: trade,
+        region: normalizeVendorRegion(region),
         trade,
       };
     case "query_projects":
@@ -73,7 +100,8 @@ export function buildToolArgs(name: string, question: string): ParsedToolArgs {
       return {
         trade: trade || "砌筑",
         quantity: quantity && quantity > 0 ? quantity : 100,
-        region: region || "上海",
+        region: normalizeVendorRegion(region) || "上海",
+        subcontractorId: inferSubcontractorId(question) || undefined,
       };
     case "query_orders":
       return {
@@ -81,7 +109,7 @@ export function buildToolArgs(name: string, question: string): ParsedToolArgs {
       };
     case "query_logistics":
       return {
-        keyword: trade || (question.includes("玻璃") ? "玻璃" : question.includes("幕墙") ? "玻璃" : "钢筋"),
+        keyword: logisticsKeyword(question),
       };
     case "query_qualifications":
       return {

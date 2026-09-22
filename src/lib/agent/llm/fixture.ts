@@ -170,8 +170,9 @@ function buildReply(context: Record<string, unknown>): string {
 
   const price = asRecord(toolResults.calculate_price);
   if (price.amount != null) {
+    const quantityUnit = String(price.unit ?? "").replace(/^元\//, "") || "项";
     parts.push(
-      `计价说明：工种 ${String(price.trade)}，工程量 ${String(price.quantity)} ${String(price.unit)}，综合单价 ${String(price.unitPrice)}，合价 ${String(price.amount)}。${String(price.notes ?? "")}`,
+      `计价说明：工种 ${String(price.trade)}，工程量 ${String(price.quantity)} ${quantityUnit}，综合单价 ${String(price.unitPrice)}，合价 ${String(price.amount)}。${String(price.notes ?? "")}`,
     );
   }
 
@@ -233,11 +234,11 @@ function buildReply(context: Record<string, unknown>): string {
     const risky = quals.filter((item) => ["缺失", "过期", "预警", "拉黑"].includes(item.status));
     if (risky.length > 0) {
       parts.push(
-        `资质风险：${risky.map((item) => `${item.name}${item.status}`).join("、")}。缺失或过期的安全生产许可证、特种作业证、保险不得安排进场。`,
+        `资质风险：${risky.map((item) => `${item.name}（${item.status}）`).join("、")}。缺失或过期的安全生产许可证、特种作业证、保险不得安排进场。`,
       );
     } else {
       parts.push(
-        `已核验资质：${quals.map((item) => `${item.name}${item.status}`).join("、")}。`,
+        `已核验资质：${quals.map((item) => `${item.name}（${item.status}）`).join("、")}。`,
       );
     }
   }
