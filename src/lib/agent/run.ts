@@ -6,6 +6,7 @@ import { extractJsonObject } from "@/lib/agent/extract-json";
 import { deriveMandatoryCapabilities } from "@/lib/agent/capabilities";
 import { executePlan } from "@/lib/agent/executor";
 import { completeLlm, LlmProviderError, resolveLlmProvider } from "@/lib/agent/llm";
+import type { LlmProviderName } from "@/lib/types";
 import { createPlan } from "@/lib/agent/planner";
 import { saveRunRecord } from "@/lib/agent/run-records";
 import { validatePlan } from "@/lib/agent/validator";
@@ -66,9 +67,11 @@ export async function runAgent(input: RunAgentInput): Promise<RunRecord> {
 
   try {
     const fallback = await getRuntimeFallback();
-    if (fallback.lastProvider) {
-      base.provider = fallback.lastProvider;
-      base.model = fallback.lastProvider;
+    const last = fallback.lastProvider;
+    if (last === "coze" || last === "openai-compatible" || last === "classroom-fixture") {
+      const name: LlmProviderName = last;
+      base.provider = name;
+      base.model = last;
     }
     const resolved = await resolveLlmProvider();
     base.provider = resolved.name;
